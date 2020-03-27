@@ -4,13 +4,8 @@ body {
   font-family: 'Montserrat', sans-serif;
   background-color: black;
   color: white;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
   scroll-behavior: smooth;
-}
-
-body{
+  width: 100vw;
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100) !important;
 }
