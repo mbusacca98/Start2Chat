@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name="viewport" content='user-scalable=no, width=device-width, initial-scale=0.75, minimum-scale=0.75, maximum-scale=0.75'/>
+    <title>Start2Chat</title>
+
+    <link rel='stylesheet' href='/stylesheets/all.css' />
+    <link href="/stylesheets/tailwind.css" rel="stylesheet"/>
+    <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
+    <link rel='stylesheet' href='/stylesheets/rooms.css' />
+
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/javascripts/ajax.js"></script>
+    <script src="/javascripts/anime.min.js"></script>
+    <script src="/javascripts/animation_rooms.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+  </head>
+  <body class="min-h-screen relative">
+
+    <div class="min-h-full w-screen flex flex-col justify-start items-center bg-transparent">
+      <div class="fixed w-screen flex">
+        <div class="header justify-start flex items-center w-full text-4xl lg:text-xl lg:py-1 py-3" onclick="window.location.href='/'">
+          <div class="flex justify-center items-center">
+            <img src="/images/logo.png" class="img-logo mr-5 ml-3" alt="">
+            <p class="text-white bold text-shadow title">Start2Chat</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="min-h-screen h-auto flex cont w-screen">
+        <div class="w-full flex flex-col lg:flex-row justify-start items-center container-rooms lg:flex-wrap">
+
+          <div class="column flex flex-col lg:flex-row justify-center items-center w-full px-1 lg:px-5 flex-wrap text-4xl lg:text-xl">
+            <div data-id="1" class="programmazione w-4/5 lg:w-1/4 flex radius mb-10 category items-center justify-center lg:mr-5 divCategory">
+              <p class="text-center w-full">Programmazione</p>
+            </div>
+
+            <div data-id="2" class="marketing w-4/5 lg:w-1/4 flex radius mb-10 category items-center justify-center lg:mr-5 divCategory">
+              <p class="text-center w-full">Marketing Digitale</p>
+            </div>
+
+            <div class="ux w-4/5 lg:w-1/4 flex radius mb-10 category items-center justify-center lg:mr-5 divCategory">
+              <p class="text-center w-full">UX/UI Design</p>
+            </div>
+
+            <div class="ai w-4/5 lg:w-1/4 flex radius mb-10 category items-center justify-center lg:mr-5 divCategory">
+              <p class="text-center w-full">AI</p>
+            </div>
+
+            <div class="data w-4/5 lg:w-1/4 flex radius mb-10 category items-center justify-center lg:mr-5 divCategory">
+              <p class="text-center w-full">Data Intelligence</p>
+            </div>
+
+            <div class="blockchain w-4/5 lg:w-1/4 flex radius bg-white mb-10 category items-center justify-center lg:mr-5 divCategory">
+              <p class="text-center w-full">Blockchain</p>
+            </div>
+
+            <div class="private-rooms w-4/5 lg:w-1/4 flex radius mb-10 category items-start justify-center lg:mr-5 p-5 lg:pd-2">
+              <div class="hidden p-1 radius max-h-full container-my_rooms flex-col relative w-full h-auto flex justify-center items-center bg-black overflow-hidden">
+                <b class=" text-giallo text-4xl lg:text-base"><i class="far fa-comment-dots mr-5 lg:mr-2"></i>Le chat di cui fai parte</b>
+                <div class="flex w-full h-full overflow-x-hidden justify-center items-center flex-col p-4 lg:p-2 overflow-y-scroll text-white text-3xl lg:text-sm">
+
+                </div>
+              </div>
+
+              <div class="flex justify-center items-center h-full w-full spinnermy text-black text-4xl lg:text-sm">
+                <i class="fas fa-sync-alt fa-spin"></i>
+              </div>
+            </div>
+
+            <!-- Div gestione e creazione stanze personalizzate e private -->
+            <div class="gestione-rooms w-4/5 lg:w-1/4 flex flex-col radius mb-10 category items-center justify-center relative lg:p-2 lg:pb-8 p-5 pb-24">
+              <div class="text-center rooms-div flex flex-col h-full w-full radius flex flex-col items-center justify-start py-5 text-3xl text-white overflow-y-scroll overflow-x-hidden px-5 lg:px-2 lg:py-2 lg:text-sm">
+                <b class="max-w-full text-black lg:text-base text-4xl"><i class="fas fa-users-cog mr-5 lg:mr-2"></i>Gestisci le chat create</b>
+                <div class="h-full w-full overflow-y-scroll">
+                  <!-- append <p> from json -->
+
+                </div>
+
+                <!--<p class="text-center overflow-scroll max-w-full">ciao</p>-->
+                <div class="flex justify-center items-center h-full spinneradmin">
+                  <i class="fas fa-sync-alt fa-spin "></i>
+                </div>
+              </div>
+
+              <!-- Form inserimento categoria -->
+              <form class="add-cat radius absolute mb-2 lg:mb-0 w-full text-4xl lg:text-base flex justify-center items-center flex-row" action="/add_cat" method="post">
+                <input type="text" class="radius px-5 w-4/7 text-center bg-black" name="nomeCat" value="" placeholder="Nome nuova categoria">
+                <button type="submit" name="submit" value="Add" class="ml-5 lg:ml-2 bg-transparent text-black text-5xl lg:text-xl"><i class="fas fa-plus-circle"></i></button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      roomsAnimate();
+      loadAdCat(<%=id %>);
+      loadMyCat(<%=id %>);
+
+      $('.rooms-div > div').on('click', 'p', function(){
+        var id = $(this).data(id);
+        var nome = $(this).text();
+        window.location.href = "/admin?name="+nome+"&id="+id.id;
+      })
+    })
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      function resizeViewport(){
+        var width = $('body > div').innerWidth();
+
+        if(width < 1024){
+          $('meta[name=viewport]').prop('content', 'user-scalable=no, width=device-width, initial-scale=0.45, minimum-scale=0.45, maximum-scale=0.45')
+        }
+      }
+
+      resizeViewport();
+
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      window.addEventListener('resize', () => {
+        // We execute the same script as before
+        resizeViewport();
+        setTimeout(function(){
+          let vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        },200);
+      });
+    })
+  </script>
+  <!-- Socket.io scripts -->
+  <script type="text/javascript">
+    var socket = io();
+
+    $('.divCategory').click(function(){
+      var id_room = $(this).data("id");
+      socket.emit('online', <%=id%>, id_room, "<%=user%>");
+      window.location.href = id_room+"/chat";
+    })
+  </script>
+</html>

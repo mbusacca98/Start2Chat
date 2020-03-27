@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" name="viewport" content='user-scalable=no, width=device-width, initial-scale=0.7, minimum-scale=0.7, maximum-scale=0.7'/>
+    <title>Start2Chat</title>
+
+    <link href="/stylesheets/tailwind.css" rel="stylesheet"/>
+    <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
+    <link rel='stylesheet' href='/stylesheets/index.css' />
+    <link rel='stylesheet' href='/stylesheets/all.css' />
+
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/anime.min.js"></script>
+    <script src="/javascripts/animation_login.js"></script>
+
+  </head>
+  <body class="relative">
+
+    <div class="full-container flex justify-center items-center h-full w-full text-4xl lg:text-base">
+
+      <div class="center-container flex-col  justify-center items-center w-2/3">
+        <div class="container-logo flex items-center justify-center text-6xl lg:text-4xl">
+          <img src="/images/logo.png" class="h-full" alt="">
+          <p class="text-white bold text-shadow title">Start2Chat</p>
+        </div>
+
+        <div class="text-description text-2xl lg:text-xl bold mt-5 lg:mt-2 flex flex-col justify-center items-center">
+          <p>Fai spicccare il volo alle tue idee e passioni<br>Inizia a chattare con i tuoi colleghi!</p>
+          <div class="counter flex justify-center items-center mt-5 text-xl radius lg:text-xs lg:px-5 lg:py-0 lg:mt-2 w-auto px-10 py-1">
+            <p id="counter" class="mr-2 lg:mr-1"><%=counter %></p><p>utenti online adesso!</p>
+          </div>
+        </div>
+
+        <% if(typeof user == 'undefined'){ %>
+        <div class="flex container-button justify-around lg:justify-center items-center mt-20 lg:mt-12">
+          <div class="w-1/2 lg:w-1/4 lg:mr-10 mr-12 flex justify-center items-center">
+            <button onclick="window.location.href='/login'" type="button" name="login" class="login flex justify-center items-center w-full radius py-1 px-3 text-giallo bg-black">Accedi</button>
+          </div>
+
+          <div class="w-1/2 lg:w-1/4  flex justify-center items-center">
+            <button onclick="window.location.href='/reg'" type="button" name="reg" class="flex justify-center items-center w-full radius py-1 px-3 text-giallo bg-black">Registrati</button>
+          </div>
+        </div>
+        <% }
+          else { %>
+            <div class="flex container-button justify-center lg:justify-center items-center mt-20 lg:mt-12">
+              <div class="w-auto flex justify-center items-center">
+                <button onclick="window.location.href='/rooms'" type="button" name="login" class="login flex justify-center items-center w-full radius py-1 px-6 text-giallo bg-black">Ciao <%= user %>, accedi!</button>
+              </div>
+            </div>
+        <% } %>
+      </div>
+
+    </div>
+
+  </body>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      function resizeViewport(){
+        var width = $('body > div').innerWidth();
+
+        if(width < 1024){
+          $('meta[name=viewport]').prop('content', 'user-scalable=no, width=device-width, initial-scale=0.45, minimum-scale=0.45, maximum-scale=0.45')
+        }
+      }
+
+      resizeViewport();
+
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      window.addEventListener('resize', () => {
+        // We execute the same script as before
+        resizeViewport();
+        setTimeout(function(){
+          let vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        },200);
+      });
+    })
+  </script>
+</html>

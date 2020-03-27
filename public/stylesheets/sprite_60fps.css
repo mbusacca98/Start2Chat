@@ -1,0 +1,30 @@
+@keyframes play30 {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: -6120px 0px;
+  }
+}
+
+.shapeshifter {
+  animation-duration: 1000ms;
+  animation-timing-function: steps(30);
+
+  background-repeat: no-repeat !important;
+  background-size: cover;
+  z-index: 1
+}
+
+.shape{
+  position: absolute;
+  z-index: 0;
+  border-radius: 30%;
+  background: #ffffff;
+  box-shadow:  -5px -5px 5px #dbdbdb,
+               5px 5px 5px #ffffff;
+}
+
+.shapeshifter.play {
+  animation-name: play30;
+}

@@ -1,0 +1,136 @@
+.cont{
+  background-image: linear-gradient(to bottom, #000000, #121212, #1d1d1d, #282828, #343434) !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container-my_rooms{
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+p {
+  text-transform: capitalize;
+}
+
+.rooms-div > div p{
+  cursor: pointer;
+}
+.img-logo{
+  width: 30%;
+}
+
+.category{
+  height: 25vh;
+  opacity: 0
+}
+
+.header{
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.header>div{
+  cursor: pointer;
+}
+
+.container-rooms{
+  margin-top: 10vh;
+}
+
+.container-rooms>div>div{
+  cursor: pointer;
+}
+
+.private-rooms{
+  background-image: url('/images/privatechat.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: default !important;
+}
+
+.gestione-rooms{
+  background-image: linear-gradient(to right top, #ffcb00, #e0c700, #c0c300, #a2bd00, #83b613);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: default !important;
+}
+
+.programmazione{
+  background-image: url('/images/programmazione.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.marketing{
+  background-image: url('/images/marketing.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.ux{
+  background-image: url('/images/ux.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.ai{
+  background-image: url('/images/ai.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.data{
+  background-image: url('/images/data.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.blockchain{
+  background-image: url('/images/blockchain.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.category>p {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.add-cat{
+  bottom: 0;
+}
+
+.sub-add{
+  border-radius: 50%
+}
+
+.rooms-div{
+  background-color: rgba(0, 0, 0, 0.4);
+  text-overflow: ellipsis;
+}
+
+@media only screen and (min-width: 1024px) {
+  .img-logo{
+    width: 20%;
+    height: auto;
+  }
+
+  .container-rooms{
+    margin-top: 10vh
+  }
+
+  .padding{
+    height: 15vh;
+  }
+
+  .category{
+    height: 32vh
+  }
+}

@@ -1,0 +1,60 @@
+body {
+  padding: 0;
+  width: 100vw;
+  height: 100vh
+}
+
+.error-login{
+  bottom: -80px;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.title-container{
+    text-align: center;
+}
+
+.text-shadow{
+  text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.52);
+}
+
+.text-description{
+  color: rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.radius{
+  border-radius: 30px;
+}
+
+.transparence-input{
+  background-color: rgba(158, 158, 158, 0.05)
+}
+
+input{
+  outline: none;
+}
+
+form>input:hover{
+  font-weight: bold;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+  transition: linear 0.2s;
+}
+
+.img-logo{
+  width: 20%;
+  height: auto;
+}
+
+@media only screen and (min-width: 1023px) {
+  .error-login{
+    bottom: -30px;
+  }
+
+  .img-logo{
+    width: 30%;
+    height: auto;
+  }
+}

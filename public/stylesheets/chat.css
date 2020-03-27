@@ -1,0 +1,308 @@
+.col-2{
+  box-shadow: 0px 10px 10px black;
+  background-image: linear-gradient(to bottom, #000000, #121212, #1d1d1d, #282828, #343434) !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 1
+}
+
+.divWriting{
+  position: absolute;
+  bottom: 0;
+  transition: linear 0.2s;
+  opacity: 0.5
+}
+
+.spinner-message{
+  top: 2%;
+}
+
+.red{
+  color: red !important;
+}
+
+.green{
+  color: green !important
+}
+
+.searchBox input{
+  background-color: rgba(158, 158, 158, 0.1)
+}
+
+.divProfile{
+  background-image: linear-gradient(to bottom, #000000, #121212, #1d1d1d, #282828, #343434) !important;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
+
+.password{
+  text-decoration: underline;
+}
+
+input[name=nome], input[name=cognome], input[name=city]{
+  text-transform: capitalize;
+}
+
+.password>b{
+  cursor: pointer;
+}
+
+.changePhoto{
+  color: rgba(158, 158, 158, 0.5);
+  text-decoration: underline;
+}
+
+.divProfile input{
+  opacity: 0.6;
+  color: black
+}
+
+.divProfile input:hover, .divProfile input:focus{
+  opacity: 1;
+  transition: linear 0.2s;
+}
+
+.closeProfile{
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  right: 0
+}
+
+.MyProfileContainer{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.profileOnlineContainer{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.radiusBottom{
+  border: solid 1px rgba(255, 255, 255, 0.44);
+  border-top: none;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+img {
+  border-radius: 50%
+}
+
+.div-userOnline::-webkit-scrollbar{
+  display: flex;
+  width: 5px;
+  border-radius: 30px;
+  background-color: rgba(158, 158, 158, 0.5);
+}
+
+.div-userOnline::-webkit-scrollbar-thumb{
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 30px
+}
+
+.div-userOnline::-webkit-scrollbar-thumb{
+  border-radius: 30px
+}
+
+.containerUser{
+  background-color: rgba(158, 158, 158, 0.05);
+  cursor: pointer;
+}
+
+.containerUser:hover{
+  box-shadow: inset 0 0 10px rgba(158, 158, 158, 0.5);
+  transition: linear 0.2s;
+}
+
+.img-logo{
+  width: 10%;
+  height: auto;
+}
+
+.account-navbar > b{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.textBox > div{
+  position: absolute;
+  bottom: 0;
+}
+
+.username{
+  overflow: hidden
+}
+
+.input-message{
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  background: #ffffff;
+  box-shadow:  -5px -6px 6px #dbdbdb
+
+}
+
+textarea{
+  outline: none;
+  resize: none;
+}
+
+.title{
+  text-overflow: ellipsis;
+}
+
+.fa-space-shuttle{
+  transform: rotate(-35deg);
+}
+
+.talk-bubble {
+  position: relative;
+	height: auto;
+  max-width: 60%;
+  z-index: 1
+}
+
+.tri-right.right-in:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -2vw;
+  top: 30%;
+	bottom: auto;
+	border: 1vh solid;
+	border-color: #1a202c transparent transparent #1a202c;
+  z-index: -1 !important;
+}
+
+.tri-left.left-in:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -2vw;
+	right: auto;
+  top: 30%;
+	bottom: auto;
+	border: 1vh solid;
+	border-color: black black transparent transparent;
+  z-index: 0;
+}
+
+.testo{
+  word-wrap: break-word;
+}
+
+.info-message{
+  border-top: 1px solid rgba(158, 158, 158, 0.3)
+}
+
+.info-message > .fa-circle{
+  opacity: 0.5
+}
+
+.info-message > .username{
+  max-width: 60%;
+  text-overflow: ellipsis;
+}
+
+
+@media only screen and (min-width: 1024px) {
+  .chatBox > div{
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+
+  .tri-right.right-in:after{
+    right: -0.6vw;
+  }
+
+  .tri-left.left-in:after{
+    left: -0.6vw;
+  }
+
+  .message{
+    min-height: 85%;
+    height: 85%;
+  }
+
+  .textBox{
+    min-height: 15%;
+    height: 15%
+  }
+
+  textarea{
+    max-height: 30vh;
+  }
+
+  .info-message{
+    font-size: 70%
+  }
+
+  .info-message > .fa-circle{
+    font-size: 30%
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .col-1{
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-shadow: 0 12px 20px rgb(0,0,0,1);
+    z-index: 2;
+  }
+
+  .img-logo{
+    width: 30%;
+  }
+
+  .message{
+    min-height: 90%;
+    height: 90%;
+  }
+
+  .textBox{
+    min-height: 10%;
+    height: 10%
+  }
+
+  .tri-right.right-in:after{
+    right: -1.5vw;
+  }
+
+  .tri-left.left-in:after{
+    left: -1.5vw;
+  }
+
+  textarea{
+    max-height: 10vh;
+  }
+
+  .info-message{
+    font-size: 80%
+  }
+
+  .info-message > .fa-circle{
+    font-size: 40%
+  }
+
+  .talk-bubble {
+    max-width: 70%
+  }
+}

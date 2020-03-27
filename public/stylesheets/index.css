@@ -1,0 +1,56 @@
+body {
+  background-image: url(/images/start2chat.gif) !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+.full-container{
+  background-color: rgb(158, 158, 158, 0.4);
+}
+
+.counter{
+  background-color: rgba(0, 0, 0, 0.5)
+}
+
+.title{
+  color: #7AE180
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.text-shadow{
+  text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.52);
+}
+
+.text-description>p{
+  text-align: center;
+}
+
+.container-button button:hover{
+  transition: linear 0.2s;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.39);
+  font-weight: bold;
+}
+
+.radius{
+  border-radius: 30px;
+}
+
+.chat-svg{
+  height: auto;
+  width: auto;
+  bottom: 0;
+  right: 0;
+}
+
+
+@media only screen and (min-width: 1023px) {
+
+}

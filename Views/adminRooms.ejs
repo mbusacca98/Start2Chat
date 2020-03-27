@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name="viewport" content='user-scalable=no, width=device-width, initial-scale=0.7, minimum-scale=0.7, maximum-scale=0.7'/>
+    <title>Start2Chat</title>
+
+    <link rel='stylesheet' href='/stylesheets/all.css' />
+    <link href="/stylesheets/tailwind.css" rel="stylesheet"/>
+    <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
+    <link rel='stylesheet' href='/stylesheets/adminRooms.css' />
+
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/javascripts/ajax.js"></script>
+    <script src="/javascripts/anime.min.js"></script>
+    <script src="/javascripts/animation_adminRooms.js"></script>
+
+
+  </head>
+  <body class="overflow-hidden">
+
+    <div class="flex flex-col justify-center items-center w-screen h-full">
+
+      <div class="header flex justify-center items-center flex-col mb-20 lg:mb-5">
+        <div class=" flex justify-center items-center pt-2 lg:pt-5" onclick="window.location.href='/rooms'" style="cursor:pointer">
+          <img src="/images/logo.png" class="img-logo mr-5 lg:mr-2" alt="">
+          <b class="text-6xl lg:text-2xl title">Start2Chat</b>
+        </div>
+        <div class="flex justify-center items-center">
+          <p class="text-description text-3xl lg:text-base" style="opacity:0.7">Gestisci le tue chat private!</p>
+        </div>
+      </div>
+
+      <div class="container flex justify-center flex-col lg:flex-row items-center text-black text-3xl lg:text-sm">
+        <!--Form aggiungi e modifica stanza-->
+        <div class="lg:w-1/4 w-full">
+
+          <div class="w-full config flex-col justify-center items-center bg-white radius p-5 mb-10 lg:mb-3">
+            <div class="flex text-giallo justify-center items-center mb-5 text-4xl lg:text-base">
+              <b>Configurazione</b>
+            </div>
+
+            <div class="flex nome-stanza justify-center items-center">
+              <form class="config-rooms justify-center items-center flex flex-col" action="" method="post">
+                <div class="flex justify-center items-center mb-5 lg:mb-2">
+                  <p class="mr-5">Nome:</p>
+                  <input data-name="<%=nameRoom %>" data-id="<%=roomID %>" type="text" name="name" value="<%=nameRoom %>" class="radius p-1 bg-gray-300 text-center">
+                </div>
+                <div class="flex justify-center items-center">
+                  <input type="submit" name="sub" value="Modifica" class="radius p-1 bg-black text-giallo px-4 mr-5 lg:px-2">
+                  <input type="button" name="del" data-id="<%=roomID %>" value="Elimina" class="radius p-1 bg-black text-red-600 px-4 lg:px-2">
+                  <b class="hidden pop-up_config text-black">ciao</b>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="w-full add-user flex-col justify-center items-center bg-white radius p-5">
+            <div class="addTitle-container flex justify-center items-center">
+              <b class="text-giallo text-4xl lg:text-base mb-5">Aggiungi utenti</b>
+            </div>
+
+            <div class="form-add flex justify-center items-center relative">
+              <form class="add-user justify-center items-center flex flex-col" action="" method="post">
+                <div class="flex justify-center items-center mb-5 lg:mb-2">
+                  <p class="w-1/3 w-auto">Username:</p>
+                  <input type="text" name="nome" value="" placeholder="Nome utente da aggiungere" class="w-2/3 radius p-1 bg-gray-300 text-center">
+                </div>
+                <input style="cursor:pointer" type="submit" name="sub" value="Aggiungi" class="radius p-1 bg-black text-giallo px-4 lg:px-2">
+              </form>
+
+              <div class="flex justify-content items-center pop-up_add hidden absolute">
+                <b class="text-red-700"><!-- popup --></b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--lista persone dentro alla stanza privata-->
+        <div class="p-5 lg:w-2/4 w-full relative bg-white lg:h-full max-h-full radius lg:ml-5 mt-20 lg:mt-0 overflow-hidden lista-container">
+          <div class="h-full w-full flex flex-col justify-center items-center">
+            <div class="title-lista flex justify-center items-center mb-5">
+              <b class="text-giallo text-4xl lg:text-base">Lista utenti aggiunti</b>
+            </div>
+            <div class="radius p-4 h-full w-full user-name flex justify-start items-center flex-col bg-gray-300 overflow-scroll">
+              <table class="table-fixed w-full flex-col items-center justify-center text-center">
+                <thead>
+                  <tr>
+                    <th class="">Username</th>
+                    <th class="mail">E-Mail</th>
+                    <th class="w-1/4 lg:w-1/5">Elimina</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- append with ajax method from db -->
+                  <tr class="empty">
+                    <td>
+                      <p class="text-red-700">Non ci sono utenti nella stanza</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="flex justify-content items-center err-db hidden absolute">
+                <b class="text-red-700 text-center ">Errore di connessione al db, riprova dopo!</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex absolute items-center justify-center avviso-del hidden">
+      <div class="w-1/2 text-6xl lg:2xl text-white items-center flex flex-col justify-center bg-transparent text-center">
+        <b>Sei sicuro?</b>
+        <div class="flex items-center justify-center w-full lg:w-1/2 mt-5 lg:mt-0">
+          <button type="button" name="si" class="radius bg-black text-red-600 text-4xl lg:text-base py-1 w-1/3 mr-20 lg:mr-5"> <b>Si</b> </button>
+          <button type="button" name="no" class="radius bg-black text-white text-4xl lg:text-base py-1 w-1/3">No</button>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+
+      $('form.add-user').submit(function(event){
+        event.preventDefault();
+        var username = $('input[name=nome]').val();
+        var id_room = $('input[name=name]').data('id');
+
+        if(username != ''){
+          addUser(username, id_room);
+        }
+      });
+
+      $('tbody').on('click', 'tr > .del > .del-button',function(){
+        var id_userDel = $(this).data('idroom');
+        var del = $(this);
+        var confirm = $(this).parent().find('.confirm');
+        var parent = $(this).parent().parent();
+
+        del.toggleClass('hidden');
+        confirm.toggleClass('hidden');
+
+        setTimeout(function(){
+          del.toggleClass('hidden');
+          confirm.toggleClass('hidden');
+        },3000)
+
+        confirm.click(function(){
+          delUser(id_userDel, parent);
+        })
+      })
+
+      loadUser(<%=roomID%>, <%=myId %>);
+
+      $('.config-rooms').submit(function(e){
+        e.preventDefault();
+
+        var dataName = $('.config-rooms input[name=name]').data('name');
+        var dataId = $('.config-rooms input[name=name]').data('id');
+
+        console.log(dataName);
+
+        var modName = $('.config-rooms input[name=name]').val().toLowerCase();
+
+        if(modName != dataName){
+          modNameCat(modName, dataId);
+        }
+      })
+
+      $('input[name=del]').click(function(){
+        var idRoom = $(this).data('id');
+
+        $('.avviso-del').toggleClass('hidden');
+
+        $('button[name=no]').click(function(){
+          $('.avviso-del').toggleClass('hidden');
+        })
+
+        $('button[name=si]').click(function(){
+          delRoom(idRoom);
+        })
+      })
+
+    })
+
+
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      function resizeViewport(){
+        var width = $('body > div').innerWidth();
+
+        if(width < 1024){
+          $('meta[name=viewport]').prop('content', 'user-scalable=no, width=device-width, initial-scale=0.45, minimum-scale=0.45, maximum-scale=0.45')
+        }
+      }
+
+      resizeViewport();
+
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      window.addEventListener('resize', () => {
+        // We execute the same script as before
+        resizeViewport();
+        setTimeout(function(){
+          let vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        },200);
+      });
+    })
+  </script>
+
+
+</html>

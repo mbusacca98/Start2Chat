@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Error page</title>
+
+    <link href="/stylesheets/tailwind.css" rel="stylesheet"/>
+
+  </head>
+  <body>
+
+    <div class="justify-center items-center flex h-screen">
+      <div class="w-1/2 flex">
+        <% if(error == 404) { %>
+          <img src="/images/404.svg" class="w-full" alt="">
+        <% }
+        else if(error == 401){%>
+          <img src="/images/security.svg" class="w-full" alt="">
+        <% } %>
+      </div>
+    </div>
+
+  </body>
+</html>

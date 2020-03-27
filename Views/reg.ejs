@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" name="viewport" content='user-scalable=no, width=device-width, initial-scale=0.7, minimum-scale=0.7, maximum-scale=0.7'/>
+
+    <title>Start2Chat</title>
+
+    <link href="/stylesheets/tailwind.css" rel="stylesheet"/>
+    <link rel='stylesheet' href='/stylesheets/admin.css' />
+    <link rel='stylesheet' href='/stylesheets/all.css' />
+    <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
+
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/anime.min.js"></script>
+    <script src="/javascripts/animation_admin.js"></script>
+    <script src="/javascripts/ajax.js"></script>
+
+  </head>
+  <body class="overflow-hidden">
+
+    <div class="h-full w-screen flex flex-col justify-center items-center px-10 py-10 text-4xl lg:text-base relative">
+
+      <div class="title-container flex flex-col bold lg:mb-5">
+        <div class="flex items-center justify-center text-6xl lg:text-4xl relative h-auto w-auto">
+          <img src="/images/logo.png" class="img-logo" alt="">
+          <p class="title text-shadow">Registrati</p>
+        </div>
+        <p class="text-description">Registrati in Start2Chat</p>
+      </div>
+
+        <div class="w-full flex justify-center items-center mt-20 lg:mt-0 mb-12 lg:mb-0 lg:w-1/2 text-black relative" id="form-reg-admin">
+          <form class="w-full h-auto flex flex-col justify-center items-center py-5 px-10 mx-12 bg-white radius" action="" method="post" id="registrati">
+
+            <p class="text-6xl lg:text-xl text-black bold mb-5">Registrati</p>
+
+            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+              <i class="fas fa-user w-1/12"></i>
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="nome" value="" placeholder="Nome">
+            </div>
+
+            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+              <i class="far fa-user w-1/12"></i>
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="cognome" value="" placeholder="Cognome">
+            </div>
+
+            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+              <i class="fas fa-user-circle w-1/12"></i>
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="username" value="" placeholder="Username">
+            </div>
+
+            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+              <i class="fas fa-envelope w-1/12"></i>
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="email" name="email" value="" placeholder="E-mail">
+            </div>
+
+            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+              <i class="fas fa-unlock w-1/12"></i>
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="password" name="password" value="" placeholder="Password">
+            </div>
+
+            <input class="radius p-1 px-10 bg-black text-giallo mt-2" type="button" name="submit" value="Registrati!">
+
+          </form>
+
+          <div class="flex justify-center items-center error-login absolute hidden">
+            <p class="text-red-700">Errore nella registrazione, riprova</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-center items-center success-reg hidden  text-center">
+          <p class="text-white text-shadow text-6xl lg:text-4xl">Registrazione avvenuta con successo!</p>
+          <p class="text-gray-300 text-2xl lg:text-lg">Verrai reindirizzato al login entro 3 secondi...</p>
+        </div>
+    </div>
+
+  </body>
+  <!--Script socket.io-->
+  <script type="text/javascript">
+    var socket = io.connect('http://localhost:3000');
+
+    //Invio dati form tramite Ajax
+    $("input[name=submit]").click(function(e){
+      var data = [];
+
+      data.push($(this).parent().find("input[name=nome]").val());
+      data.push($(this).parent().find("input[name=cognome]").val());
+      data.push($(this).parent().find("input[name=username]").val());
+      data.push($(this).parent().find("input[name=email]").val());
+      data.push($(this).parent().find("input[name=password]").val());
+
+      e.preventDefault();
+
+      $(this).parent().find('input[name=submit]').val('Attendere...');
+      $(this).parent().find('input[name=submit]').attr("disabled", true);
+      $('.error-login').addClass('hidden');
+
+      //Invio i dati del form al server tramite Ajax
+      reg(data);
+    })
+  </script>
+
+  <!--script ombra div di login-->
+  <script>
+    // Inzio script ombra div di login
+    var myform = $('#form-login-admin > form');
+
+    $('#form-login-admin > form input').focusin(function() {
+      $(myform).toggleClass("box-shadow");
+    })
+
+    $('#form-login-admin > form input').focusout(function() {
+      $(myform).toggleClass("box-shadow");
+    })
+
+    var myform2 = $('#form-reg-admin > form');
+
+    $('#form-reg-admin > form input').focusin(function() {
+      $(myform2).toggleClass("box-shadow");
+    })
+
+    $('#form-reg-admin > form input').focusout(function() {
+      $(myform2).toggleClass("box-shadow");
+    })
+    // Fine script
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      function resizeViewport(){
+        var width = $('body > div').innerWidth();
+
+        if(width < 1024){
+          $('meta[name=viewport]').prop('content', 'user-scalable=no, width=device-width, initial-scale=0.45, minimum-scale=0.45, maximum-scale=0.45')
+        }
+      }
+
+      resizeViewport();
+
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      window.addEventListener('resize', () => {
+        // We execute the same script as before
+        resizeViewport();
+        setTimeout(function(){
+          let vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        },200);
+      });
+    })
+  </script>
+
+</html>

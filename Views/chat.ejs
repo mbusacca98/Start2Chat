@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name="viewport" content='user-scalable=no, width=device-width, initial-scale=0.7, minimum-scale=0.7, maximum-scale=0.7'/>
+    <title>Start2Chat</title>
+
+    <link href="/stylesheets/tailwind.css" rel="stylesheet"/>
+    <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
+    <link rel='stylesheet' href='/stylesheets/chat.css' />
+    <link rel='stylesheet' href='/stylesheets/all.css' />
+    <link rel='stylesheet' href='/stylesheets/sprite_60fps.css' />
+
+    <script src="/javascripts/jquery.js"></script>
+    <script src="/javascripts/ajax.js"></script>
+    <script src="/javascripts/auto-ta.js"></script>
+    <script src="/javascripts/anime.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="/javascripts/auto-ta-proto.js"></script>
+    <script src="/javascripts/animationChat.js"></script>
+    <script src="/javascripts/e-search.js"></script>
+
+  </head>
+  <body class="overflow-hidden w-screen">
+
+    <div class="allContainer w-screen h-full flex items-center justify-center z-0 relative">
+      <!-- Colonna sinistra, who is online... -->
+      <div class="col-1 lg:w-1/3 w-2/3 flex bg-white h-full lg:relative hidden absolute lg:flex ">
+        <div class="full-container h-full w-full flex flex-col justify-start items-center py-12 lg:py-5">
+          <!-- Div titolo -->
+          <div class="div-title flex w-full px-10">
+            <div class="flex w-4/5 lg:w-full flex flex-col justify-center items-center">
+              <b class="text-4xl lg:text-xl title-user-online text-shadow text-black"><i class="fas fa-users mr-3"></i>Utenti Online</b>
+              <div class="counterOnline bg-black radius px-5 mt-2 lg:px-2 text-2xl lg:text-xs title">
+                <i class="fas fa-users text-white mr-5 lg:mr-3"></i>
+                <b class=""><%=users.length%></b>
+              </div>
+            </div>
+            <div class="close flex w-1/5 justify-end items-center lg:hidden">
+              <i class="fas fa-times text-4xl text-black"></i>
+            </div>
+          </div>
+
+          <div class="searchBox flex justify-center items-center w-2/3 text-white my-10 lg:my-5 text-xl lg:text-sm">
+            <div class="flex items-center justify-center bg-black w-auto radius px-3">
+              <div class="flex items-center justify-start h-full">
+                <i class="fas fa-search text-giallo bg-black"></i>
+              </div>
+              <input type="text" name="" value="" class="px-3 searchInput" placeholder="Cerca username...">
+            </div>
+          </div>
+
+          <!-- Div utenti online -->
+          <div class="containerItems div-userOnline flex flex-col justify-start items-end h-auto text-black w-full px-3 text-2xl lg:text-sm overflow-y-auto">
+            <!-- Container box user and photo user -->
+            <% for(var i=0 ; i < users.length ; i++){
+              if(users[i].id != userId){
+                var color, stato;
+
+                if(users[i].status == 1){
+                  color = 'green';
+                  stato = 'Online';
+                }
+                else{
+                  color = 'red';
+                  stato = 'Offline';
+                }
+                %>
+              <div data-out="<%=users[i].out%>" data-search="<%=users[i].username%>" data-idUser="<%=users[i].id%>" class="flex containerUser justify-end items-center px-5 py-2 w-full radius mb-5 lg:mb-2">
+                <div class="w-2/3 flex flex-col justify-end items-end pr-5">
+                  <b data-foto="<%=users[i].photo%>" data-username="<%=users[i].username%>" data-idUser="<%=users[i].id%>" data-mail="<%=users[i].mail%>" data-nome="<%=users[i].nome%>" data-cognome="<%=users[i].cognome%>" data-city="<%=users[i].city%>" data-linkedin="<%=users[i].linkedin%>" data-facebook="<%=users[i].facebook%>" data-instagram="<%=users[i].instagram%>" class="username flex items-center max-w-full">
+                    <i class="fas fa-circle lg:text-xs text-base lg:mr-2 mr-3 <%=color%>"></i>
+                    <%=users[i].username%>
+                  </b>
+                  <p class="text-xl lg:text-xs writing"><%=stato%></p>
+                </div>
+                <div class="w-auto">
+                  <img class="w-24 h-24 lg:w-12 lg:h-12 flex justify-end" src="<%=users[i].photo%>" alt="">
+                </div>
+              </div>
+            <% }
+              } %>
+
+            <% if(users.length == 1) { %>
+              <div class="nessunoOnline justify-center items-center flex w-full">
+                <b class="text-black text-2xl lg:text-base">Nessun utente online oltre te!</b>
+              </div>
+            <% }%>
+
+          </div>
+        </div>
+      </div>
+      <!-- Colonna Chat -->
+      <div class="col-2 w-full lg:w-2/3 flex flex-col h-full justify-start items-center px-5 lg:px-3">
+        <!-- NAVBAR LOGO E ACCOUNT -->
+        <div class="navbar flex justify-around items-center text-4xl lg:text-base py-5 lg:py-2 w-full">
+          <div class="account-navbar w-1/4 lg:w-1/3 flex items-center lg:order-2 lg:justify-end">
+            <i class="fas fa-circle circle-online lg:text-xs text-base lg:mr-2 mr-3"></i>
+            <i class="far fa-user-circle mr-2"></i>
+            <b class="text-giallo myUser" style="cursor:pointer" onclick="popupMyProfile(1)"><%=user %></b>
+          </div>
+
+          <div class="logo-navbar w-2/4 lg:w-2/3 lg:order-1">
+            <div  class="flex justify-center lg:justify-start items-center ">
+              <img style="cursor:pointer" onclick="window.location.href='/'" src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
+              <p style="cursor:pointer" onclick="window.location.href='/'" class="text-white bold text-shadow title text-5xl lg:text-xl">Start2Chat</p>
+            </div>
+          </div>
+
+          <div class="hamburger-menu w-1/4 flex justify-end text-5xl pr-10 lg:hidden">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+
+        <!-- Spazio chat -->
+        <div class="chatBox flex flex-col justify-center items-center w-full h-full py-12 px-10 lg:py-0 lg:pt-5 relative overflow-hidden">
+          <div class="bg-white flex flex-col w-full h-full radius max-h-full">
+            <div class="message text-black flex items-center justify-start p-5 flex-col relative">
+              <div class="spinner-message hidden flex justify-center items-center absolute">
+                <i class="fas fa-sync-alt fa-spin"></i>
+              </div>
+              <div class="messageDiv w-full h-full flex flex-col justify-start relative text-xl lg:text-xs overflow-y-scroll">
+                <!--prototipo di messaggio-->
+
+                <% for(var i=messages.length-1 ; i >= 0 ; i--){ %>
+                  <% if(messages[i].id_user == userId){ %>
+
+                  <div class="flex justify-end items-center pb-2 lg:pb-1 mr-5">
+                    <div class="talk-bubble tri-right radius right-in bg-gray-900 text-white w-auto px-5 py-2">
+                      <div class="talktext flex flex-col justify-center items-center">
+
+                        <p class="text-left w-full"><%=messages[i].text%></p>
+                        <div class="info-message flex justify-start items-center w-full pt-1 mt-1 overflow-hidden flex-no-wrap">
+                          <p class="title text-rigth username"><%=messages[i].username%></p>
+                          <i class="fas fa-circle text-white px-2"></i>
+                          <i class="far fa-clock title"></i>
+                          <p class="title ml-1"><%=messages[i].date.getHours()%>:<%=messages[i].date.getMinutes()%></p>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <% } else{ %>
+                  <div class="flex justify-start items-center ml-5 pb-2 lg:pb-1">
+                      <div class="talk-bubble tri-left radius left-in bg-black text-white w-auto px-5 py-2 ">
+                        <div class="talktext flex flex-col justify-center items-center">
+
+                          <p class="text-left w-full"><%=messages[i].text%></p>
+                          <div class="info-message flex justify-end items-center w-full pt-1 mt-1 overflow-hidden flex-no-wrap">
+                            <p class="text-giallo text-rigth username"><%=messages[i].username%></p>
+                            <i class="fas fa-circle text-white px-2"></i>
+                            <i class="far fa-clock text-giallo"></i>
+                            <p class="text-giallo ml-1"><%=messages[i].date.getHours()%>:<%=messages[i].date.getMinutes()%></p>
+                          </div>
+
+                        </div>
+                      </div>
+                  </div>
+                  <% } %>
+                <% } %>
+
+                <!--end-->
+              </div>
+
+              <div class="flex absolute justify-center items-center divWriting w-full hidden">
+                <p class="lg:text-xs text-base pb-1">sta scrivendo...</p>
+              </div>
+            </div>
+
+            <div class="textBox flex w-full relative">
+              <div class="flex w-full h-auto min-h-full h-1 px-10">
+                <div class=" w-full flex items-center justify-center radius input-message h-auto px-10 py-5 text-black text-3xl lg:text-sm z-10">
+                  <div class="textAreaParent radius w-11/12 h-auto flex justify-center items-center bg-white py-1">
+                    <textarea id="textArea" rows='1' class="w-full py-1 px-5 h-auto bg-transparent" type="text" name="text" placeholder="Scrivi qui..."></textarea>
+                  </div>
+                  <div class="w-1/12 flex justify-end items-center text-5xl lg:text-xl ml-10 lg:ml-0">
+                    <div class="submit flex items-center justify-center relative w-auto h-auto" style="cursor:pointer">
+                      <div class="shapeshifter w-12 h-12 lg:w-8 lg:h-8 relative" style="background-image: url(/images/sprite_60fps.svg)"></div>
+                      <div class="shape h-full w-full lg:p-5 p-10"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Div absolute per modifica/visualizza profilo utente e logout -->
+      <div class="MyProfileContainer w-screen h-screen z-10 flex justify-center items-center hidden">
+
+        <div class="radius divProfile w-5/6 lg:w-2/5 h-auto flex flex-col justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
+          <div class="titleProfile flex justify-center items-center w-full lg:w-full relative stagger">
+            <b class="title text-5xl lg:text-xl">Modifica profilo</b>
+            <div class="flex items-center closeProfile w-auto h-full">
+              <i class="fas fa-times text-5xl lg:text-xl pr-10 text-white" onclick="popupMyProfile(0)" style="cursor:pointer"></i>
+            </div>
+          </div>
+          <!--Div cambio password-->
+          <div class="changePassword flex justify-center items-center w-full h-auto lg:p-5 hidden">
+            <form class="flex flex-col justify-center items-center " action="" method="post">
+              <input class="radius lg:px-5 mb-2" type="password" name="vecchia" value="" placeholder="Vecchia password">
+              <input class="radius lg:px-5" type="password" name="nuova" value="" placeholder="Nuova password">
+              <div class="flex justify-center items-center w-full">
+                <button class="indietro radius lg:px-5 bg-black text-white lg:mt-5 w-1/2" type="button" name="button" onclick="changePassword()">Indietro</button>
+                <button class="modPassword radius lg:px-5 bg-black text-giallo lg:mt-5 w-1/2 ml-2" type="button" name="button" onclick="modPassword(<%=userId%>)">Conferma</button>
+              </div>
+            </form>
+
+            <div class="text-white text-center text-4xl lg:text-xl py-5 lg:py-1 hidden">
+              <b class="w-full text-center ok hidden">Password modificata!</b>
+              <b class="no w-full text-center hidden">Errore, riprova!</b>
+            </div>
+          </div>
+          <!-- foto e nome e cognome -->
+          <div class="flex w-full justify-center items-center pt-5 lg:w-full form1 ">
+            <div class="myfoto flex flex-col justify-center items-center w-1/3 stagger">
+              <img class="w-40 h-40 lg:w-20 lg:h-20 flex" src="/images/noimgprofile.jpeg" alt="">
+              <p class="changePhoto text-2xl lg:text-xs" style="cursor:pointer" onclick="fotoForm()">Change</p>
+            </div>
+
+            <div class="flex flex-col justify-center items-center w-2/3 stagger">
+              <div class="nome flex justify-center items-center w-full">
+                <p class="text-white w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Nome: </p>
+                <input class="radius px-5 w-9/12" type="text" name="nome" value="Attendere...">
+              </div>
+
+              <div class="cognome flex justify-center items-center w-full mt-3 lg:mt-2 stagger">
+                <p class="text-white w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Cognome: </p>
+                <input class="radius px-5 w-9/12" type="text" name="cognome" value="Attendere...">
+              </div>
+            </div>
+          </div>
+          <!-- Resto del form -->
+          <div class="form flex flex-col justify-center items-center w-full mt-5 lg:mt-2 lg:w-full ">
+            <div class="emailPassword flex items-center w-full">
+              <div class="mail flex justify-center items-center w-1/2 mr-5 stagger">
+                <i class="fas fa-envelope w-1/12 text-white mr-5 lg:mr-2"></i>
+                <input class="radius w-11/12 px-5" type="email" name="mail" value="Attendere...">
+              </div>
+
+              <div class="username flex justify-center items-center w-1/2 stagger">
+                <i class="far fa-user w-1/12 text-white mr-5 lg:mr-2"></i>
+                <input class="radius w-11/12 px-5" type="text" name="username" value="Attendere...">
+              </div>
+            </div>
+
+            <div class="city flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+              <i class="fas fa-home text-white pr-5 lg:pr-0 w-1/12"></i>
+              <input class="radius px-5 w-7/12" type="text" name="city" value="Grammichele" placeholder="La tua città">
+            </div>
+
+            <div class="instagram flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+              <i class="fab fa-instagram text-white pr-5 lg:pr-2 w-1/12"></i>
+              <input class="radius px-5 w-7/12" type="text" name="instagram" value="@mbusacca" placeholder="Username instagram">
+            </div>
+
+            <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+              <i class="fab fa-facebook text-white pr-5 lg:pr-2 w-1/12"></i>
+              <input class="radius px-5 w-7/12" type="text" name="facebook" value="mbusacca" placeholder="Username facebook">
+            </div>
+
+            <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+              <i class="fab fa-linkedin-in pr-5 lg:pr-2 w-1/12 text-white"></i>
+              <input class="radius px-5 w-7/12" type="text" name="linkedin" value="mbusacca" placeholder="Link linkedin">
+            </div>
+
+            <div class="modPassword flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+              <p class="text-white password" style="cursor:pointer" onclick="changePassword()">Cambia password</p>
+            </div>
+
+            <div class="buttonDiv flex justify-around items-center text-giallo mt-8 w-2/3 lg:mt-4">
+              <button class="radius bg-black w-1/2 mr-5 lg:w-1/3 flex justify-center items-center lg:mr-0 px-5 py-1 stagger" type="button" name="modifica"><b>Modifica</b></button>
+              <button class="radius bg-red-700 w-1/2 lg:w-1/3 flex justify-center items-center px-5 py-1 text-white stagger" type="button" name="logout" onclick="logout()"><b>Logout</b></button>
+            </div>
+          </div>
+
+          <!-- Form inserimento foto -->
+          <div class="fotoForm mt-10 hidden">
+            <form class="flex flex-col justify-center items-center w-full fotoProfilo" action="../foto" method="post" enctype="multipart/form-data">
+              <input class="radius w-full bg-white inputfoto" type="file" name="foto" value="">
+              <input class="bg-white mt-2 radius px-5 py-1" type="submit" name="submit" value="Invia">
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <!-- Div dati utenti online -->
+      <div class="profileOnlineContainer w-screen h-screen z-10 flex justify-center items-center hidden">
+        <div class="radius divProfile w-5/6 lg:w-2/5 h-auto flex flex justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
+          <div class="profileDescription w-full flex-col justify-center items-center text-white">
+            <!-- Titolo -->
+            <div class="titleProfile flex justify-center items-center w-full relative stagger">
+              <b class="title text-5xl lg:text-xl">Profilo di Matteo</b>
+              <div class="flex items-center closeProfile w-auto h-full">
+                <i class="fas fa-times text-5xl lg:text-xl pr-10 text-white" onclick="popupProfileOnline(0)" style="cursor:pointer"></i>
+              </div>
+            </div>
+            <!-- Foto e nome -->
+            <div class="flex w-full justify-center items-center pt-5 lg:w-full">
+              <div class="fotoProfile flex flex-col justify-center items-center w-1/3 stagger">
+                <img class="w-40 h-40 lg:w-20 lg:h-20 flex" src="/images/noimgprofile.jpg" alt="">
+              </div>
+
+              <div class="flex flex-col justify-center items-center w-2/3 stagger">
+                <div class="nome flex justify-center items-center w-full">
+                  <p class="text-giallo w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Nome: </p>
+                  <p class="radiusBottom w-9/12 px-2">ciao</p>
+                </div>
+
+                <div class="cognome flex justify-center items-center w-full mt-3 lg:mt-2 stagger">
+                  <p class="text-giallo w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Cognome: </p>
+                  <p class="radiusBottom w-9/12 px-2">ciao</p>
+                </div>
+              </div>
+            </div>
+            <!-- Resto del profilo utente -->
+            <div class="form flex flex-col justify-center items-center w-full mt-5 lg:mt-2 lg:w-full">
+              <div class="emailPassword flex items-center w-full">
+                <div class="mail flex justify-center items-center w-1/2 mr-5 stagger">
+                  <i class="fas fa-envelope w-1/12 text-white mr-5 lg:mr-2"></i>
+                  <p class="radiusBottom w-11/12 px-2 overflow-scroll max-w-full"></p>
+                </div>
+
+                <div class="username flex justify-center items-center w-1/2 stagger">
+                  <i class="far fa-user w-1/12 text-white mr-5 lg:mr-2"></i>
+                  <p class="radiusBottom w-11/12 px-2">Matteo</p>
+                </div>
+              </div>
+
+              <div class="city flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+                <i class="fas fa-home text-white pr-5 lg:pr-0 w-1/12"></i>
+                <p class="radiusBottom w-7/12 px-2">ciao</p>
+              </div>
+
+              <div class="instagram flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+                <i class="fab fa-instagram text-orange-600 pr-5 lg:pr-2 w-1/12"></i>
+                <p class="radiusBottom w-7/12 px-2">ciao</p>
+              </div>
+
+              <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+                <i class="fab fa-facebook text-blue-600 pr-5 lg:pr-2 w-1/12"></i>
+                <p class="radiusBottom w-7/12 px-2">ciao</p>
+              </div>
+
+              <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+                <i class="fab fa-linkedin-in text-blue-500 pr-5 lg:pr-2 w-1/12"></i>
+                <p class="radiusBottom w-7/12 px-2">ciao</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.fa-bars').click(function(){
+        $('.col-1').toggleClass('hidden');
+        col1('100%', '0');
+      })
+
+      $('.close').click(function(){
+        col1('0', '100%');
+      })
+    })
+
+    $('.searchInput').search();
+  </script>
+  <!-- Autosize textarea -->
+  <script type="text/javascript">
+    var ta = autota(document.getElementById('textArea'));
+  </script>
+  <!-- Online/Offline -->
+  <script type="text/javascript">
+    var socket = io();
+
+      if(navigator.onLine){
+        online();
+        socket.emit('dentro', <%=idRoom%>, <%=userId%>);
+      }
+
+      window.addEventListener("online", function(){
+        socket.emit('dentro', <%=idRoom%>, <%=userId %>); //Mando a tutti che sono online, presente
+        online();
+      })
+
+      window.addEventListener("offline", function(){
+        socket.emit('fuori', <%=idRoom%>, <%=userId %>); // mando a tutti che sono andato offline, assente
+        offline();
+      })
+
+      window.addEventListener("beforeunload", function(){
+        socket.emit('close', <%=idRoom%>, <%=userId%>, '<%=user%>');
+      })
+
+      function online(){
+        $('input, textarea, button[name=logout]').prop('disabled', false);
+        $('.textAreaParent').css('background-color', 'white').css('opacity', '1');
+        $('textarea').prop('placeholder', 'Scrivi qui...');
+        $('.fa-space-shuttle').css('opacity', '1');
+        $('.circle-online').css('color', 'green');
+      }
+
+      function offline(){
+        $('input, textarea, button[name=logout]').prop('disabled', true);
+        $('.textAreaParent').css('background-color', 'red').css('opacity', '0.5');
+        $('textarea').prop('placeholder', 'Sei offline!');
+        $('.fa-space-shuttle').css('opacity', '0.2');
+        $('.circle-online').css('color', 'red');
+      }
+
+      function logout(){
+        var id = <%=userId %>;
+        socket.emit('offline', id, <%=idRoom%>, "<%=user%>");
+        window.location.href="../logout";
+      }
+
+  </script>
+
+  <!-- Modifica/visualizza profilo personale/utente online -->
+  <script type="text/javascript">
+    $(document).ready(function(){
+      //riempimento form con dati utente
+      loadMyProfile(<%=userId %>);
+
+      $('button[name=modifica]').click(function(){
+        var formData = [];
+
+        formData.push($('.MyProfileContainer input[name=nome]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=cognome]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=mail]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=username]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=city]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=instagram]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=facebook]').val().toLowerCase());
+        formData.push($('.MyProfileContainer input[name=linkedin]').val().toLowerCase());
+
+        modProfile(formData);
+      })
+    })
+
+    $('.div-userOnline').on('click', '.containerUser', function(){
+
+      var foto = $(this).find(".username").data("foto");
+      var nome = $(this).find(".username").data("nome");
+      var cognome = $(this).find(".username").data("cognome");
+      var mail = $(this).find(".username").data("mail");
+      var username = $(this).find(".username").data("username");
+      var city = $(this).find(".username").data("city");
+      var instagram = $(this).find(".username").data("instagram");
+      var facebook = $(this).find(".username").data("facebook");
+      var linkedin = $(this).find(".username").data("linkedin");
+
+      $('.profileOnlineContainer .title').text('Profilo di '+username);
+      $('.profileOnlineContainer .fotoProfile > img').prop('src', foto);
+      $('.profileOnlineContainer .nome p').text(nome).css('textTransform', 'capitalize');
+      $('.profileOnlineContainer .cognome p').text(cognome).css('textTransform', 'capitalize');
+      $('.profileOnlineContainer .mail p').text(mail);
+      $('.profileOnlineContainer .city p').text(city || 'Nessuna città impostata').css('textTransform', 'capitalize');
+      $('.profileOnlineContainer .instagram p').text(instagram || 'Nessun account');
+      $('.profileOnlineContainer .facebook p').text(facebook || 'Nessun account');
+      $('.profileOnlineContainer .linkedin p').text(linkedin || 'Nessun account');
+      $('.profileOnlineContainer .username p').text(username || 'Nessun account');
+
+      popupProfileOnline(1);
+
+    })
+
+  </script>
+
+  <!-- Resize script -->
+  <script type="text/javascript">
+    $(document).ready(function(){
+      function resizeViewport(){
+        var width = $('body > div').innerWidth();
+
+        if(width < 1024){
+          $('meta[name=viewport]').prop('content', 'user-scalable=no, width=device-width, initial-scale=0.45, minimum-scale=0.45, maximum-scale=0.45')
+        }
+      }
+
+      resizeViewport();
+
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      window.addEventListener('resize', () => {
+        // We execute the same script as before
+        resizeViewport();
+        setTimeout(function(){
+          let vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        },200);
+      });
+    })
+  </script>
+
+  <!-- Script per i messaggi -->
+  <script type="text/javascript">
+    $('.submit').click(function(){
+      var text_message = $('textarea').val();
+      message(<%=userId%>, <%=idRoom%>, text_message);
+      $('textarea').val('');
+    })
+
+    $(document).ready(function() {
+      $('.messageDiv').scrollTop($('.messageDiv > div:last-child').position().top);
+    })
+
+    function send(id_user, id_room, text_message){
+      var today= new Date();
+      var stringOra = today.getHours() + ':' + today.getMinutes();
+
+      var template = $('#template-message-my').html();
+      var html = '';
+
+      html += template.replace(/{{message}}/g, text_message)
+                      .replace(/{{username}}/g, '<%=user%>')
+                      .replace(/{{hour}}/g, stringOra);
+
+      $('.messageDiv').append(html);
+      $('.messageDiv').scrollTop(($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top));
+
+      socket.emit('message', id_user, <%=idRoom%>, text_message, stringOra);
+    }
+
+    socket.on('sendMessage', function(id_user, text, time){
+        var template = $('#template-message-user').html();
+        var html = '';
+        var user = '';
+
+        $('.div-userOnline > div').each(function(){
+          if($(this).data('iduser') == id_user){
+            user = $(this).data('search');
+            return false;
+          }
+        })
+
+        html += template.replace(/{{message}}/g, text)
+                        .replace(/{{nome}}/g, user)
+                        .replace(/{{hour}}/g, time);
+
+        $('.messageDiv').append(html);
+    })
+  </script>
+
+  <!--template user online-->
+  <script type="text/template" id="template-user">
+    <div data-out="{{out}}" data-search="{{username}}" data-idUser="{{id}}" class="flex containerUser justify-end items-center px-5 py-2 w-full radius mb-5 lg:mb-2">
+      <div class="w-2/3 flex flex-col justify-end items-end pr-5">
+        <b data-foto="{{photo}}" data-username="{{username}}" data-idUser="{{id}}" data-mail="{{mail}}" data-nome="{{nome}}" data-cognome="{{cognome}}" data-city="{{city}}" data-linkedin="{{linkedin}}" data-facebook="{{facebook}}" data-instagram="{{instagram}}" class="username flex items-center max-w-full">
+          <i class="fas fa-circle lg:text-xs text-base lg:mr-2 mr-3 {{color}}"></i>
+          {{username}}
+        </b>
+        <p class="text-xl lg:text-xs writing">{{stato}}</p>
+      </div>
+      <div class="w-auto">
+        <img class="w-24 h-24 lg:w-12 lg:h-12 flex justify-end" src="{{photo}}" alt="">
+      </div>
+    </div>
+  </script>
+
+  <!--template my message-->
+  <script type="text/template" id="template-message-my">
+    <div class="flex justify-end items-center">
+      <div class="talk-bubble tri-right radius right-in bg-gray-900 text-white w-auto px-5 py-2 mb-2 lg:mb-1 mr-5">
+        <div class="talktext flex flex-col justify-center items-center">
+
+          <p class="text-left w-full">{{message}}</p>
+          <div class="info-message flex justify-start items-center w-full pt-1 mt-1 overflow-hidden flex-no-wrap">
+            <p class="title text-rigth username">{{username}}</p>
+            <i class="fas fa-circle text-white px-2"></i>
+            <i class="far fa-clock title"></i>
+            <p class="title ml-1">{{hour}}</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- template message users -->
+  <script type="text/template" id="template-message-user">
+    <div class="flex justify-start items-center">
+      <div class="talk-bubble tri-left radius left-in bg-black text-white w-auto px-5 py-2 ml-5 mb-2 lg:mb-1">
+        <div class="talktext flex flex-col justify-center items-center">
+
+          <p class="text-left w-full">{{message}}</p>
+          <div class="info-message flex justify-end items-center w-full pt-1 mt-1 overflow-hidden flex-no-wrap">
+            <p class="text-giallo text-rigth username">{{nome}}</p>
+            <i class="fas fa-circle text-white px-2"></i>
+            <i class="far fa-clock text-giallo"></i>
+            <p class="text-giallo ml-1">{{hour}}</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- Socket scripts -->
+  <script type="text/javascript">
+    var counterOnline = <%=users.length%>;
+    var out = [];
+    var usersArray = new Array();
+
+      //Controllo i div degli utenti connessi e se sono offline li inserisco in out[]
+      $('.div-userOnline > div').each(function(){
+        var varOut = $(this).data('out');
+
+        if(varOut != 'dentro'){
+          var userData= {
+            username: $(this).data('search'),
+            id_user: $(this).data('iduser'),
+            dateOut: varOut
+          };
+          out.push(userData);
+        }
+      })
+
+      $('.fotoProfilo .inputfoto').submit(function(e){
+        e.preventDefault();
+
+        var stringa = $('.fotoProfilo .inputfoto').val();
+        var separatore = "\\";
+        var splitStringa = stringa.split(separatore.trim());
+        var url = "/fotoUtenti/"+splitStringa[2];
+
+        socket.emit('changefoto', <%=idRoom%>, <%=userId%>, url);
+        $('.fotoProfilO').submit();
+      })
+
+    socket.on('dentro', function(id){
+      $('div[data-idUser='+id+'] i').removeClass('green');
+      $('div[data-idUser='+id+'] i').removeClass('red');
+      $('div[data-idUser='+id+'] i').addClass('green');
+
+      $('div[data-idUser='+id+'] .writing').text('Online');
+
+      for(var i=0 ; i<out.length ; i++){
+        if(out[i].id_user == id){
+          out.splice(i, 1);
+          break;
+        }
+      }
+    })
+
+    socket.on('fuori', function(id){
+      $('div[data-idUser='+id+'] i').removeClass('green');
+      $('div[data-idUser='+id+'] i').removeClass('red');
+      $('div[data-idUser='+id+'] i').addClass('red');
+
+      $('div[data-idUser='+id+'] .writing').text('Offline');
+
+      if(id == <%=userId%>){ //Se l'id del user che è uscito è uguale a userId rimando online l'utente, questo in caso di multi login
+        socket.emit('dentro', <%=idRoom%>, <%=userId %>);
+      }
+    })
+
+    socket.on('close', function(id, datetime, name){
+      $('div[data-idUser='+id+'] i').removeClass('green');
+      $('div[data-idUser='+id+'] i').removeClass('red');
+      $('div[data-idUser='+id+'] i').addClass('red');
+
+      $('div[data-idUser='+id+'] .writing').text('Offline');
+
+      var userOut = {
+        username: name,
+        id_user: id,
+        dateOut: datetime
+      };
+      out.push(userOut);
+
+      if(id == <%=userId%>){ //Se l'id del user che è uscito è uguale a userId rimando online l'utente, questo in caso di multi login
+        socket.emit('dentro', <%=idRoom%>, <%=userId %>);
+      }
+    })
+
+    socket.on("offline", function(idUser){
+      $('div[data-idUser='+idUser+']').remove();
+      counterOnline--;
+      $('.counterOnline b').text(counterOnline);
+
+      if(counterOnline == 1){
+        $('.div-userOnline').append('<div class="nessunoOnline justify-center items-center flex w-full"><b class="text-black text-2xl lg:text-base">Nessun utente online oltre te!</b></div>');
+      }
+    })
+
+    socket.on("online", function(data){
+      var template = $('#template-user').html();
+      var html = "";
+      var colore, stato;
+
+      if(data.status == 1){
+        colore = "green";
+        stato = "Online";
+      }
+      else{
+        stato = "Offline";
+        colore = "red";
+      }
+
+      html += template.replace(/{{id}}/g, data.id)
+                      .replace(/{{out}}/g, data.out)
+                      .replace(/{{username}}/g, data.username)
+                      .replace(/{{cognome}}/g, data.cognome)
+                      .replace(/{{nome}}/g, data.nome)
+                      .replace(/{{mail}}/g, data.mail)
+                      .replace(/{{photo}}/g, data.photo)
+                      .replace(/{{linkedin}}/g, data.linkedin)
+                      .replace(/{{facebook}}/g, data.facebook)
+                      .replace(/{{instagram}}/g, data.instagram)
+                      .replace(/{{color}}/g, data.colore)
+                      .replace(/{{stato}}/g, data.stato)
+                      .replace(/{{city}}/g, data.city);
+
+      $('.nessunoOnline').remove();
+      $('.div-userOnline').append(html);
+      counterOnline++;
+      $('.counterOnline b').text(counterOnline);
+    })
+
+    //Funzione writing....
+    $('textarea').on('keydown', function(){
+      socket.emit('writing', <%=idRoom%>, <%=userId%>, '<%=user%>');
+    })
+
+    $('textarea').on('keyup', function(){
+      stopWriting();
+    })
+
+    socket.on('writing', function(userID, userName){
+      $('div[data-idUser='+userID+'] .writing').text('Sta scrivendo...');
+      $('.divWriting').removeClass('hidden');
+      $('.divWriting p').text(userName+' sta scrivendo...');
+      clearTimeout(timeout);
+    })
+
+    socket.on('stopWriting', function(userID){
+      $('div[data-idUser='+userID+'] .writing').text('Online');
+      $('.divWriting').addClass('hidden');
+    })
+
+    var timeout;
+
+    function stopWriting(){
+      timeout= setTimeout(function(){
+        socket.emit('stopWriting', <%=idRoom%>, <%=userId%>);
+      }, 3000)
+    }
+
+  </script>
+
+  <!-- Controllo gli utenti fuori a intervalli e in caso sono inattivi li rimuovo -->
+  <script type="text/javascript">
+    $(document).ready(function(){
+    setInterval(function(){
+      var now = new Date();
+      var timeNow = now.getTime();
+
+      for(var i=0 ; i<out.length ; i++){
+        if(timeNow-out[i].dateOut > 10000){
+          socket.emit('offline', out[i].id_user, <%=idRoom%>, out[i].username);
+          $('div[data-idUser='+out[i].id_user+']').remove();
+          counterOnline--;
+          $('.counterOnline b').text(counterOnline);
+
+          if(counterOnline == 1){
+            $('.div-userOnline').append('<div class="nessunoOnline justify-center items-center flex w-full"><b class="text-black text-2xl lg:text-base">Nessun utente online oltre te!</b></div>');
+          }
+
+          out.splice(i, 1);
+        }
+      }
+    },5000)
+  })
+
+  </script>
+
+  <!-- infinite scroll message -->
+  <script type="text/javascript">
+    var client = $('.messageDiv');
+    var index = 10;
+    var id = <%=userId%>;
+    var room = <%=idRoom%>;
+
+    client.scroll(function(){
+      if(client.scrollTop() == 0){
+        loadMessage(index, room);
+      }
+    })
+
+    if(client[0].scrollHeight <= client[0].offsetHeight){
+      loadMessage(index, room);
+    }
+  </script>
+</html>
