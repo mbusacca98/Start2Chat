@@ -9,8 +9,12 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-p {
+p{
   text-transform: capitalize;
+}
+
+.parsley-errors-list {
+  display: none
 }
 
 .rooms-div > div p{
@@ -117,6 +121,10 @@ p {
   text-overflow: ellipsis;
 }
 
+.divCategory{
+  cursor: pointer;
+}
+
 @media only screen and (min-width: 1024px) {
   .img-logo{
     width: 20%;
@@ -133,5 +141,12 @@ p {
 
   .category{
     height: 32vh
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .div-error{
+    right: 100%;
+    top: 100%
   }
 }

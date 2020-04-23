@@ -4,6 +4,26 @@ body {
   height: 100vh
 }
 
+.error-field-icon {
+  position: absolute;
+  right: -10;
+}
+
+.div-check{
+  position: absolute;
+  right: 0
+}
+
+.parsley-errors-list {
+  display: none
+}
+
+.div-error{
+  position: absolute !important;
+  background-color: rgba(195, 24, 27, 0.49);
+  white-space: nowrap;
+}
+
 .error-login{
   bottom: -80px;
 }

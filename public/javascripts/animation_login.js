@@ -52,6 +52,7 @@ function formShakeError(){
 
 function formShakeNotCorrect(){
   formShakeError();
+  console.log('ciao');
   $('.error-login > .desc').text("Username o password errata, riprova!");
   $('.error-login > .desc').addClass("text-red-700");
   $('.error-login').removeClass('loggato');

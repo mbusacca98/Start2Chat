@@ -8,6 +8,7 @@
     <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
     <link rel='stylesheet' href='/stylesheets/index.css' />
     <link rel='stylesheet' href='/stylesheets/all.css' />
+    <link rel='stylesheet' href='/stylesheets/noscript.css' />
 
     <script src="/javascripts/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -16,6 +17,26 @@
 
   </head>
   <body class="relative">
+
+    <noscript>
+      <div class="w-screen h-screen flex justify-center items-center z-10 flex-col">
+        <div class="title-div flex w-full h-auto justify-center items-center">
+          <div class="flex justify-center items-center lg:w-1/10">
+            <img src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
+          </div>
+          <b class="title text-4xl">Start2Chat</b>
+        </div>
+        <div class="flex justify-center items-center mt-10 mb-10 text-giallo text-3xl lg:text-2xl w-screen">
+          <i class="fas fa-code mr-10"></i>
+        </div>
+        <div class="flex justify-center items-center flex-col">
+          <b class="text-white text-lg">Non puoi visualizzare la pagina</b>
+          <div class="flex justify-center items-center text-giallo px-5 text-center lg:text-base">
+            <p>Hai javascript disabilitato su questa pagina, prova ad attivarlo e ricarica!</p>
+          </div>
+        </div>
+      </div>
+    </noscript>
 
     <div class="full-container flex justify-center items-center h-full w-full text-4xl lg:text-base">
 

@@ -9,15 +9,39 @@
     <link rel='stylesheet' href='/stylesheets/admin.css' />
     <link rel='stylesheet' href='/stylesheets/all.css' />
     <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
+    <link rel='stylesheet' href='/stylesheets/login.css' />
+    <link rel='stylesheet' href='/stylesheets/noscript.css' />
 
     <script src="/javascripts/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/anime.min.js"></script>
     <script src="/javascripts/animation_admin.js"></script>
     <script src="/javascripts/ajax.js"></script>
+    <script src="/javascripts/animation_validationForm.js"></script>
+    <script src="/javascripts/validator.js"></script>
 
   </head>
   <body class="overflow-hidden">
+
+    <noscript>
+      <div class="w-screen h-screen flex justify-center items-center z-10 flex-col">
+        <div class="title-div flex w-full h-auto justify-center items-center">
+          <div class="flex justify-center items-center lg:w-1/10">
+            <img src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
+          </div>
+          <b class="title text-4xl">Start2Chat</b>
+        </div>
+        <div class="flex justify-center items-center mt-10 mb-10 text-giallo text-3xl lg:text-2xl w-screen">
+          <i class="fas fa-code mr-10"></i>
+        </div>
+        <div class="flex justify-center items-center flex-col">
+          <b class="text-white text-lg">Non puoi visualizzare la pagina</b>
+          <div class="flex justify-center items-center text-giallo px-5 text-center lg:text-base">
+            <p>Hai javascript disabilitato su questa pagina, prova ad attivarlo e ricarica!</p>
+          </div>
+        </div>
+      </div>
+    </noscript>
 
     <div class="h-full w-screen flex flex-col justify-center items-center px-10 py-10 text-4xl lg:text-base relative">
 
@@ -30,36 +54,71 @@
       </div>
 
         <div class="w-full flex justify-center items-center mt-20 lg:mt-0 mb-12 lg:mb-0 lg:w-1/2 text-black relative" id="form-reg-admin">
-          <form class="w-full h-auto flex flex-col justify-center items-center py-5 px-10 mx-12 bg-white radius" action="" method="post" id="registrati">
+          <form class="w-full h-auto flex flex-col justify-center items-center py-5 px-10 mx-12 bg-white radius" id="registrati" action="" method="post" data-parsley-focus="first">
 
             <p class="text-6xl lg:text-xl text-black bold mb-5">Registrati</p>
 
-            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+            <div class="flex justify-center items-center w-full mb-5 lg:mb-2 relative">
               <i class="fas fa-user w-1/12"></i>
-              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="nome" value="" placeholder="Nome">
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="nome" value="" placeholder="Nome" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+              <div class="error-field-icon flex hidden items-center">
+                <i class="fas fa-exclamation-circle text-red-800"></i>
+                <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+              </div>
+              <div class="div-check hidden">
+                <i class="fas fa-check text-green-500 "></i>
+              </div>
             </div>
 
-            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+            <div class="flex relative justify-center items-center w-full mb-5 lg:mb-2">
               <i class="far fa-user w-1/12"></i>
-              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="cognome" value="" placeholder="Cognome">
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="cognome" value="" placeholder="Cognome" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+              <div class="error-field-icon flex hidden items-center">
+                <i class="fas fa-exclamation-circle text-red-800"></i>
+                <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+              </div>
+              <div class="div-check hidden">
+                <i class="fas fa-check text-green-500 "></i>
+              </div>
             </div>
 
-            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+            <div class="flex relative justify-center items-center w-full mb-5 lg:mb-2">
               <i class="fas fa-user-circle w-1/12"></i>
-              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="username" value="" placeholder="Username">
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="text" name="username" value="" placeholder="Username" data-parsley-required="true" data-parsley-trigger="focus keyup" minlength='4' data-parsley-minlength-message="Minimo 4 caratteri" data-parsley-required-message="Campo obbligatorio">
+              <div class="error-field-icon flex hidden items-center">
+                <i class="fas fa-exclamation-circle text-red-800"></i>
+                <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+              </div>
+              <div class="div-check hidden">
+                <i class="fas fa-check text-green-500 "></i>
+              </div>
             </div>
 
-            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+            <div class="flex relative justify-center items-center w-full mb-5 lg:mb-2">
               <i class="fas fa-envelope w-1/12"></i>
-              <input class="transparence-input w-3/4 radius p-1 px-10" type="email" name="email" value="" placeholder="E-mail">
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="email" name="email" value="" placeholder="E-mail" data-parsley-type="email" required="" data-parsley-trigger="focus keyup" data-parsley-type-message="e-Mail non valida" data-parsley-required-message="Campo obbligatorio">
+              <div class="error-field-icon flex hidden items-center">
+                <i class="fas fa-exclamation-circle text-red-800"></i>
+                <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+              </div>
+              <div class="div-check hidden">
+                <i class="fas fa-check text-green-500 "></i>
+              </div>
             </div>
 
-            <div class="flex justify-center items-center w-full mb-5 lg:mb-2">
+            <div class="flex relative justify-center items-center w-full mb-5 lg:mb-2">
               <i class="fas fa-unlock w-1/12"></i>
-              <input class="transparence-input w-3/4 radius p-1 px-10" type="password" name="password" value="" placeholder="Password">
+              <input class="transparence-input w-3/4 radius p-1 px-10" type="password" name="password" value="" placeholder="Password" data-parsley-trigger="focus keyup" data-parsley-required="true" minlength='6' data-parsley-minlength-message="Minimo 6 caratteri" data-parsley-required-message="Campo obbligatorio">
+              <div class="error-field-icon flex hidden items-center">
+                <i class="fas fa-exclamation-circle text-red-800"></i>
+                <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+              </div>
+              <div class="div-check hidden">
+                <i class="fas fa-check text-green-500 "></i>
+              </div>
             </div>
 
-            <input class="radius p-1 px-10 bg-black text-giallo mt-2" type="button" name="submit" value="Registrati!">
+            <input class="radius p-1 px-10 bg-black text-giallo mt-2" type="submit" name="submit" value="Registrati!">
 
           </form>
 
@@ -75,21 +134,23 @@
     </div>
 
   </body>
+
   <!--Script socket.io-->
   <script type="text/javascript">
     var socket = io.connect('http://localhost:3000');
 
     //Invio dati form tramite Ajax
-    $("input[name=submit]").click(function(e){
+    $('form').parsley().on('form:init', function(){
+
+    })
+    .on('form:success', function(){
       var data = [];
 
-      data.push($(this).parent().find("input[name=nome]").val());
-      data.push($(this).parent().find("input[name=cognome]").val());
-      data.push($(this).parent().find("input[name=username]").val());
-      data.push($(this).parent().find("input[name=email]").val());
-      data.push($(this).parent().find("input[name=password]").val());
-
-      e.preventDefault();
+      data.push($("form input[name=nome]").val());
+      data.push($("form input[name=cognome]").val());
+      data.push($("form input[name=username]").val());
+      data.push($("form input[name=email]").val());
+      data.push($("form input[name=password]").val());
 
       $(this).parent().find('input[name=submit]').val('Attendere...');
       $(this).parent().find('input[name=submit]').attr("disabled", true);
@@ -97,7 +158,40 @@
 
       //Invio i dati del form al server tramite Ajax
       reg(data);
+
     })
+    .on('form:submit', function(){
+      return false;
+    })
+    .on('field:error', function(){
+      $(this.$element).parent().find('.div-check').addClass('hidden');
+      $(this.$element).parent().find('.error-field-icon').removeClass('hidden');
+      var target = $(this.$element).parent().find('.error-field-icon');
+      opacity_animation(target.get(0), $(this.$element).get(0), 'rgb(155, 44, 44)');
+      $(this.$element).parent().find('.error-field-icon > p').text(this.getErrorsMessages());
+    })
+    .on('field:success', function(){
+      $(this.$element).parent().find('.div-check').removeClass('hidden');
+      var target = $(this.$element).parent().find('.div-check');
+      opacity_animation(target.get(0), $(this.$element).get(0), 'rgb(72, 187, 120)');
+      $(this.$element).parent().find('.error-field-icon').addClass('hidden');
+    })
+
+    $('.fa-exclamation-circle').click(function(){
+      var target = $(this).parent().find('p');
+      if(!$(target).is(':visible')){
+        error_form_message(target.get(0), 1);
+        target.removeClass("hidden");
+      } else {
+        error_form_message(target.get(0), 0);
+      }
+    })
+
+    $('input').on('keyup', function(){
+      var target = $(this).parent().find('p');
+      target.addClass("hidden");
+    })
+
   </script>
 
   <!--script ombra div di login-->

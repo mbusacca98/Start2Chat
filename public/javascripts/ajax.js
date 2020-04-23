@@ -8,7 +8,6 @@ function login(user, pass){
         loggedIn();
       }
       else if(response.output == 'error-login'){
-
         formShakeNotCorrect();
       }
       else if(response.output == 'campi-mancanti'){
@@ -211,7 +210,7 @@ function loadMyProfile(id){
   })
 }
 
-function modProfile(data){
+function modProfile(data, id){
 
   $.ajax({
     url: '../ajax/modProfile',
@@ -225,6 +224,7 @@ function modProfile(data){
       if(res.output == 'ok'){
         $('button[name=modifica]').text('Modificato!');
         setTimeout(function(){
+          socket.emit('modProfile', data, id);
           location.reload();
         },2000)
       }
@@ -271,7 +271,7 @@ function message(id_user, id_room, text_message){
   })
 }
 
-function loadMessage(indice, room){
+function loadMessage(indice, room, userId){
   $.ajax({
     url: '../ajax/loadMessage',
     method: 'POST',
@@ -282,29 +282,51 @@ function loadMessage(indice, room){
     success: function(data){
       $('.spinner-message').addClass('hidden');
 
-      index += 10;
+      index = data.output[0].id;
+
+      for(var i=0 ; i<data.output.length ; i++){
+        if(data.output[i].id < index){
+          index = data.output[i].id;
+        }
+      }
+
       var i = 0;
       var temp = client[0].scrollHeight;
 
+      var d = new Date();
+      var today = d.getDate();
+      var stringData = "";
+
       for(i=0 ; i<10 ; i++){
-        var template = $('#template-message-user').html();
         var html = '';
         var user = '';
 
-        $('.div-userOnline > div').each(function(){
-          if($(this).data('iduser') == data.output[i].id_user){
-            user = $(this).data('search');
-            return false;
-          }
-        })
+        var date = new Date(data.output[i].date);
 
-        html += template.replace(/{{message}}/g, data.output[i].text)
-                        .replace(/{{nome}}/g, user)
-                        .replace(/{{hour}}/g, );
+        if(date.getDate() == today-1 && date.getMonth() == d.getMonth() && date.getFullYear() == d.getFullYear()) {
+            stringData = "Ieri, ";
+        } else if(date.getDate() < today-1 && date.getMonth() == d.getMonth() && date.getFullYear() == d.getFullYear()){
+            var month = date.getMonth() + 1 ;
+            stringData = date.getDate() + '/' + month + '/' + date.getFullYear().toString().substr(-2) + ', ';
+        }
+
+        if(data.output[i].id_user == userId){
+          var template = $('#template-message-my').html();
+          html += template.replace(/{{message}}/g, data.output[i].text)
+                          .replace(/{{date}}/g, date)
+                          .replace(/{{username}}/g, data.output[i].username)
+                          .replace(/{{hour}}/g, (stringData != '' ? stringData : '') + date.getHours() + ':' + (date.getMinutes()<10 ? '0' : '') + date.getMinutes());
+        } else{
+          var template = $('#template-message-user').html();
+          html += template.replace(/{{message}}/g, data.output[i].text)
+                          .replace(/{{date}}/g, date)
+                          .replace(/{{nome}}/g, data.output[i].username)
+                          .replace(/{{hour}}/g, (stringData != '' ? stringData : '') + date.getHours() + ':' + (date.getMinutes()<10 ? '0' : '') + date.getMinutes());
+        }
 
         $('.messageDiv').prepend(html);
 
-        //$('.messageDiv').scrollTop($('.messageDiv')[0].scrollHeight - temp);
+        $('.messageDiv').scrollTop($('.messageDiv')[0].scrollHeight - temp);
       }
 
       $('.spinner-message').addClass('hidden');

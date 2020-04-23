@@ -274,3 +274,62 @@ function animePass(res){
     }
   })
 }
+
+function new_message(){
+  var max = 16;
+  var tl = anime.timeline({
+    easing: "linear",
+    loop: true
+  })
+  .add({
+    targets: '.new-message',
+    duration: 1000,
+    translateY: [{value: max * -1},{value: max},{value: max/2 * -1},{value: max/2},{value: max * 0}],
+  })
+  .add({
+
+  },3000)
+}
+
+//Animazione per tornare alla home o alle Stanze
+function animationNavbar(trigger){
+  var tl = anime.timeline({
+    easing: 'linear'
+  })
+  if(trigger == 'open'){
+    tl.add({
+      targets: '.text-nav',
+      duration: 400,
+      opacity: ['1', '0'],
+      complete: function(){
+        $('.text-nav').addClass('hidden');
+        $('.menu-nav').removeClass('hidden');
+      }
+    })
+    tl.add({
+      targets: '.menu-nav > div',
+      opacity: ['0', '1'],
+      translateY: ['-50%', '0'],
+      delay: anime.stagger(200),
+      duration: 200
+    })
+  } else{
+    tl.add({
+      targets: '.menu-nav > div',
+      opacity: ['1', '0'],
+      translateY: ['0', '-50%'],
+      delay: anime.stagger(200),
+      duration: 200,
+      complete: function(){
+        $('.text-nav').removeClass('hidden');
+        $('.menu-nav').addClass('hidden');
+      }
+    })
+    tl.add({
+      targets: '.text-nav',
+      duration: 300,
+      opacity: ['0', '1'],
+    })
+  }
+
+}

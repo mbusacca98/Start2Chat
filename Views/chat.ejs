@@ -8,6 +8,8 @@
     <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
     <link rel='stylesheet' href='/stylesheets/chat.css' />
     <link rel='stylesheet' href='/stylesheets/all.css' />
+    <link rel='stylesheet' href='/stylesheets/noscript.css' />
+    <link rel='stylesheet' href='/stylesheets/sprite_60fps.css' />
 
     <script src="/javascripts/jquery.js"></script>
     <script src="/javascripts/ajax.js"></script>
@@ -18,9 +20,32 @@
     <script src="/javascripts/auto-ta-proto.js"></script>
     <script src="/javascripts/animationChat.js"></script>
     <script src="/javascripts/e-search.js"></script>
+    <script src="/javascripts/animation_validationForm.js"></script>
+    <script src="/javascripts/validator.js"></script>
 
   </head>
-  <body class="overflow-hidden w-screen">
+
+  <body class="overflow-hidden w-screen ">
+
+    <noscript>
+      <div class="w-screen h-screen flex justify-center items-center z-10 flex-col">
+        <div class="title-div flex w-full h-auto justify-center items-center">
+          <div class="flex justify-center items-center lg:w-1/10">
+            <img src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
+          </div>
+          <b class="title text-4xl">Start2Chat</b>
+        </div>
+        <div class="flex justify-center items-center mt-10 mb-10 text-giallo text-3xl lg:text-2xl w-screen">
+          <i class="fas fa-code mr-10"></i>
+        </div>
+        <div class="flex justify-center items-center flex-col">
+          <b class="text-white text-lg">Non puoi visualizzare la pagina</b>
+          <div class="flex justify-center items-center text-giallo px-5 text-center lg:text-base">
+            <p>Hai javascript disabilitato su questa pagina, prova ad attivarlo e ricarica!</p>
+          </div>
+        </div>
+      </div>
+    </noscript>
 
     <div class="allContainer w-screen h-full flex items-center justify-center z-0 relative">
       <!-- Colonna sinistra, who is online... -->
@@ -92,17 +117,35 @@
       <!-- Colonna Chat -->
       <div class="col-2 w-full lg:w-2/3 flex flex-col h-full justify-start items-center px-5 lg:px-3">
         <!-- NAVBAR LOGO E ACCOUNT -->
-        <div class="navbar flex justify-around items-center text-4xl lg:text-base py-5 lg:py-2 w-full">
+        <div class="navbar flex justify-around lg:justify-between items-center text-4xl lg:text-base py-5 lg:py-2 w-full">
           <div class="account-navbar w-1/4 lg:w-1/3 flex items-center lg:order-2 lg:justify-end">
             <i class="fas fa-circle circle-online lg:text-xs text-base lg:mr-2 mr-3"></i>
             <i class="far fa-user-circle mr-2"></i>
             <b class="text-giallo myUser" style="cursor:pointer" onclick="popupMyProfile(1)"><%=user %></b>
           </div>
 
-          <div class="logo-navbar w-2/4 lg:w-2/3 lg:order-1">
-            <div  class="flex justify-center lg:justify-start items-center ">
-              <img style="cursor:pointer" onclick="window.location.href='/'" src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
-              <p style="cursor:pointer" onclick="window.location.href='/'" class="text-white bold text-shadow title text-5xl lg:text-xl">Start2Chat</p>
+          <div class="logo-navbar w-2/4 lg:w-1/4 lg:order-1">
+            <div  class="flex justify-center lg:justify-start items-center w-full">
+              <div class="flex justify-center items-center w-1/3">
+                <img src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
+              </div>
+              <div class="flex justify-center items-center w-2/3">
+                <p style="cursor:pointer" class="text-white bold text-shadow title text-5xl lg:text-xl text-nav">Start2Chat</p>
+
+                <div class="flex justify-center lg:justify-start items-center hidden menu-nav lg:pl-5">
+                  <div style="cursor: pointer" class="flex home-navbar justify-center items-center" onclick="window.location.href='/'">
+                    <i class="fas fa-home text-giallo lg:mr-1 mr-2 text-xxl"></i>
+                    <p class="text-white lg:text-sm text-xl">Home</p>
+                  </div>
+
+                <p class="text-white lg:text-base lg:mr-3 lg:ml-3 mr-3 ml-3">|</p>
+
+                  <div style="cursor: pointer" onclick="window.location.href='/rooms'" class="flex home-navbar justify-center items-center">
+                    <i class="fas fa-sitemap text-giallo lg:mr-1 mr-2 text-xxl"></i>
+                    <p class="text-white lg:text-sm text-xl">Stanze</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -114,18 +157,33 @@
         <!-- Spazio chat -->
         <div class="chatBox flex flex-col justify-center items-center w-full h-full py-12 px-10 lg:py-0 lg:pt-5 relative overflow-hidden">
           <div class="bg-white flex flex-col w-full h-full radius max-h-full">
-            <div class="message text-black flex items-center justify-start p-5 flex-col relative">
+            <div class="message text-black flex items-center justify-start p-5 pb-10 lg:pb-5 flex-col relative">
               <div class="spinner-message hidden flex justify-center items-center absolute">
                 <i class="fas fa-sync-alt fa-spin"></i>
               </div>
-              <div class="messageDiv w-full h-full justify-start relative text-xl lg:text-xs overflow-y-scroll">
+              <div  class="messageDiv w-full h-full justify-start relative text-xl lg:text-xs overflow-y-scroll overflow-x-hidden">
                 <!--prototipo di messaggio-->
+                <%
+                  var d = new Date();
+                  var today = d.getDate();
+                  var stringData = "";
+                %>
 
                 <% for(var i=messages.length-1 ; i >= 0 ; i--){ %>
+                  <!--Controllo la data dei messaggi prima d stampara a video-->
+                  <% if(messages[i].date.getDate() == today-1 && messages[i].date.getMonth() == d.getMonth() && messages[i].date.getFullYear() == d.getFullYear()) {
+                      stringData = "Ieri, ";
+                  } else if(messages[i].date.getDate() < today-1 && messages[i].date.getMonth() == d.getMonth() && messages[i].date.getFullYear() == d.getFullYear()){
+                      var month = messages[i].date.getMonth() + 1 ;
+                      stringData = messages[i].date.getDate() + '/' + month + '/' + messages[i].date.getFullYear().toString().substr(-2) + ', ';
+                  } else{
+                      stringData = "";
+                  } %>
+
                   <% if(messages[i].id_user == userId){ %>
 
-                  <div class="flex justify-end items-center pb-2 lg:pb-1 mr-5">
-                    <div class="talk-bubble tri-right radius right-in bg-gray-900 text-white w-auto px-5 py-2">
+                  <div class="flex justify-end items-center pb-2 lg:pb-1 mr-5" data-date="<%=messages[i].date%>">
+                    <div class="talk-bubble bg-black tri-right radius right-in text-white w-auto px-5 py-2">
                       <div class="talktext flex flex-col justify-center items-center">
 
                         <p class="text-left w-full"><%=messages[i].text%></p>
@@ -133,7 +191,7 @@
                           <p class="title text-rigth username"><%=messages[i].username%></p>
                           <i class="fas fa-circle text-white px-2"></i>
                           <i class="far fa-clock title"></i>
-                          <p class="title ml-1"><%=messages[i].date.getHours()%>:<%=messages[i].date.getMinutes()%></p>
+                          <p class="title ml-1 hour"><%=stringData != '' ? stringData : '' %><%=messages[i].date.getHours()%>:<%=messages[i].date.getMinutes()<10 ? '0' : '' %><%=messages[i].date.getMinutes()%></p>
                         </div>
 
                       </div>
@@ -141,8 +199,8 @@
                   </div>
 
                   <% } else{ %>
-                  <div class="flex justify-start items-center ml-5 pb-2 lg:pb-1">
-                      <div class="talk-bubble tri-left radius left-in bg-black text-white w-auto px-5 py-2 ">
+                  <div class="flex justify-start items-center ml-5 pb-2 lg:pb-1" data-date="<%=stringData%>">
+                      <div class="talk-bubble tri-left radius other-message left-in text-white w-auto px-5 py-2 ">
                         <div class="talktext flex flex-col justify-center items-center">
 
                           <p class="text-left w-full"><%=messages[i].text%></p>
@@ -150,7 +208,7 @@
                             <p class="text-giallo text-rigth username"><%=messages[i].username%></p>
                             <i class="fas fa-circle text-white px-2"></i>
                             <i class="far fa-clock text-giallo"></i>
-                            <p class="text-giallo ml-1"><%=messages[i].date.getHours()%>:<%=messages[i].date.getMinutes()%></p>
+                            <p class="text-giallo ml-1 hour"><%=stringData != '' ? stringData : '' %><%=messages[i].date.getHours()%>:<%=messages[i].date.getMinutes()<10 ? '0' : '' %><%=messages[i].date.getMinutes()%></p>
                           </div>
 
                         </div>
@@ -163,7 +221,11 @@
               </div>
 
               <div class="flex absolute justify-center items-center divWriting w-full hidden">
-                <p class="lg:text-xs text-base pb-1">sta scrivendo...</p>
+                <p class="lg:text-xs text-base pt-1">sta scrivendo...</p>
+              </div>
+
+              <div class="flex absolute justify-center items-center new-message w-full hidden" style="cursor:pointer">
+                <p class="lg:text-xs text-base pb-3"><i class="fas fa-angle-double-down mr-1"></i>Nuovi messaggi</p>
               </div>
             </div>
 
@@ -191,6 +253,7 @@
 
       <!-- Div absolute per modifica/visualizza profilo utente e logout -->
       <div class="MyProfileContainer w-screen h-screen z-10 flex justify-center items-center hidden">
+        <form class="MyProfileContainer w-screen h-screen z-10 flex justify-center items-center hidden" action="" method="" autocomplete="off">
 
         <div class="radius divProfile w-5/6 lg:w-2/5 h-auto flex flex-col justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
           <div class="titleProfile flex justify-center items-center w-full lg:w-full relative stagger">
@@ -201,14 +264,14 @@
           </div>
           <!--Div cambio password-->
           <div class="changePassword flex justify-center items-center w-full h-auto lg:p-5 hidden">
-            <form class="flex flex-col justify-center items-center " action="" method="post">
+            <div class="flex flex-col justify-center items-center " action="" method="post">
               <input class="radius lg:px-5 mb-2" type="password" name="vecchia" value="" placeholder="Vecchia password">
               <input class="radius lg:px-5" type="password" name="nuova" value="" placeholder="Nuova password">
               <div class="flex justify-center items-center w-full">
                 <button class="indietro radius lg:px-5 bg-black text-white lg:mt-5 w-1/2" type="button" name="button" onclick="changePassword()">Indietro</button>
                 <button class="modPassword radius lg:px-5 bg-black text-giallo lg:mt-5 w-1/2 ml-2" type="button" name="button" onclick="modPassword(<%=userId%>)">Conferma</button>
               </div>
-            </form>
+            </div>
 
             <div class="text-white text-center text-4xl lg:text-xl py-5 lg:py-1 hidden">
               <b class="w-full text-center ok hidden">Password modificata!</b>
@@ -223,49 +286,77 @@
             </div>
 
             <div class="flex flex-col justify-center items-center w-2/3 stagger">
-              <div class="nome flex justify-center items-center w-full">
+              <div class="nome flex justify-center items-center w-full relative">
                 <p class="text-white w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Nome: </p>
-                <input class="radius px-5 w-9/12" type="text" name="nome" value="Attendere...">
+                <input class="radius px-5 w-9/12 bordered" type="text" name="nome" value="Attendere..." data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+                <div class="error-field-icon flex hidden items-center">
+                  <i class="fas fa-exclamation-circle text-red-800"></i>
+                  <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+                </div>
+                <div class="div-check hidden">
+                  <i class="fas fa-check text-green-500 "></i>
+                </div>
               </div>
 
-              <div class="cognome flex justify-center items-center w-full mt-3 lg:mt-2 stagger">
+              <div class="cognome flex justify-center items-center w-full mt-3 lg:mt-2 stagger relative">
                 <p class="text-white w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Cognome: </p>
-                <input class="radius px-5 w-9/12" type="text" name="cognome" value="Attendere...">
+                <input class="radius px-5 w-9/12 bordered" type="text" name="cognome" value="Attendere..." data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+                <div class="error-field-icon flex hidden items-center">
+                  <i class="fas fa-exclamation-circle text-red-800"></i>
+                  <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+                </div>
+                <div class="div-check hidden">
+                  <i class="fas fa-check text-green-500 "></i>
+                </div>
               </div>
             </div>
           </div>
           <!-- Resto del form -->
           <div class="form flex flex-col justify-center items-center w-full mt-5 lg:mt-2 lg:w-full ">
             <div class="emailPassword flex items-center w-full">
-              <div class="mail flex justify-center items-center w-1/2 mr-5 stagger">
+              <div class="mail flex justify-center items-center w-1/2 mr-5 stagger relative">
                 <i class="fas fa-envelope w-1/12 text-white mr-5 lg:mr-2"></i>
-                <input class="radius w-11/12 px-5" type="email" name="mail" value="Attendere...">
+                <input class="radius w-11/12 px-5 bordered" type="email" name="mail" value="" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio" data-parsley-type-message="e-Mail non valida" >
+                <div class="error-field-icon flex hidden items-center">
+                  <i class="fas fa-exclamation-circle text-red-800"></i>
+                  <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+                </div>
+                <div class="div-check hidden">
+                  <i class="fas fa-check text-green-500 "></i>
+                </div>
               </div>
 
-              <div class="username flex justify-center items-center w-1/2 stagger">
+              <div class="username flex justify-center items-center w-1/2 stagger relative">
                 <i class="far fa-user w-1/12 text-white mr-5 lg:mr-2"></i>
-                <input class="radius w-11/12 px-5" type="text" name="username" value="Attendere...">
+                <input class="radius w-11/12 px-5 bordered" type="text" name="username" value="" data-parsley-required="true" minlength='4' data-parsley-minlength-message="Minimo 4 caratteri" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+                <div class="error-field-icon flex hidden items-center">
+                  <i class="fas fa-exclamation-circle text-red-800"></i>
+                  <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+                </div>
+                <div class="div-check hidden">
+                  <i class="fas fa-check text-green-500 "></i>
+                </div>
               </div>
             </div>
 
             <div class="city flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fas fa-home text-white pr-5 lg:pr-0 w-1/12"></i>
-              <input class="radius px-5 w-7/12" type="text" name="city" value="Grammichele" placeholder="La tua città">
+              <input class="radius px-5 w-7/12" type="text" name="city" value="" placeholder="La tua città">
             </div>
 
             <div class="instagram flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fab fa-instagram text-white pr-5 lg:pr-2 w-1/12"></i>
-              <input class="radius px-5 w-7/12" type="text" name="instagram" value="@mbusacca" placeholder="Username instagram">
+              <input class="radius px-5 w-7/12" type="text" name="instagram" value="" placeholder="Username instagram">
             </div>
 
             <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fab fa-facebook text-white pr-5 lg:pr-2 w-1/12"></i>
-              <input class="radius px-5 w-7/12" type="text" name="facebook" value="mbusacca" placeholder="Username facebook">
+              <input class="radius px-5 w-7/12" type="text" name="facebook" value="" placeholder="Username facebook">
             </div>
 
             <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fab fa-linkedin-in pr-5 lg:pr-2 w-1/12 text-white"></i>
-              <input class="radius px-5 w-7/12" type="text" name="linkedin" value="mbusacca" placeholder="Link linkedin">
+              <input class="radius px-5 w-7/12" type="text" name="linkedin" value="" placeholder="Link linkedin">
             </div>
 
             <div class="modPassword flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
@@ -273,21 +364,26 @@
             </div>
 
             <div class="buttonDiv flex justify-around items-center text-giallo mt-8 w-2/3 lg:mt-4">
-              <button class="radius bg-black w-1/2 mr-5 lg:w-1/3 flex justify-center items-center lg:mr-0 px-5 py-1 stagger" type="button" name="modifica"><b>Modifica</b></button>
+              <button class="radius bg-black w-1/2 mr-5 lg:w-1/3 flex justify-center items-center lg:mr-0 px-5 py-1 stagger" type="submit" name="modifica"><b>Modifica</b></button>
               <button class="radius bg-red-700 w-1/2 lg:w-1/3 flex justify-center items-center px-5 py-1 text-white stagger" type="button" name="logout" onclick="logout()"><b>Logout</b></button>
             </div>
           </div>
 
           <!-- Form inserimento foto -->
           <div class="fotoForm mt-10 hidden">
-            <form class="flex flex-col justify-center items-center w-full fotoProfilo" action="../foto" method="post" enctype="multipart/form-data">
-              <input class="radius w-full bg-white inputfoto" type="file" name="foto" value="">
+            <form class="" action="index.html" method="post">
+
+            </form>
+            <form class="flex flex-col justify-center items-center w-full fotoProfilo" action="../foto" method="post" enctype="multipart/form-data" id="formFoto" data-parsley-validate="">
+              <input class="radius w-full bg-white inputfoto bordered" type="file" name="foto" value="" required="" data-parsley-trigger="focus keyup" data-parsley-required-message="Inserire foto"  data-parsley-foto="">
               <input class="bg-white mt-2 radius px-5 py-1" type="submit" name="submit" value="Invia">
             </form>
           </div>
         </div>
+      </form>
 
       </div>
+
       <!-- Div dati utenti online -->
       <div class="profileOnlineContainer w-screen h-screen z-10 flex justify-center items-center hidden">
         <div class="radius divProfile w-5/6 lg:w-2/5 h-auto flex flex justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
@@ -308,12 +404,12 @@
               <div class="flex flex-col justify-center items-center w-2/3 stagger">
                 <div class="nome flex justify-center items-center w-full">
                   <p class="text-giallo w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Nome: </p>
-                  <p class="radiusBottom w-9/12 px-2">ciao</p>
+                  <p class="radiusBottom w-9/12 px-2"></p>
                 </div>
 
                 <div class="cognome flex justify-center items-center w-full mt-3 lg:mt-2 stagger">
                   <p class="text-giallo w-3/12 flex justify-end items-center pr-5 lg:pr-2 text-xl lg:text-sm">Cognome: </p>
-                  <p class="radiusBottom w-9/12 px-2">ciao</p>
+                  <p class="radiusBottom w-9/12 px-2"></p>
                 </div>
               </div>
             </div>
@@ -327,28 +423,34 @@
 
                 <div class="username flex justify-center items-center w-1/2 stagger">
                   <i class="far fa-user w-1/12 text-white mr-5 lg:mr-2"></i>
-                  <p class="radiusBottom w-11/12 px-2">Matteo</p>
+                  <p class="radiusBottom w-11/12 px-2"></p>
                 </div>
               </div>
 
               <div class="city flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
                 <i class="fas fa-home text-white pr-5 lg:pr-0 w-1/12"></i>
-                <p class="radiusBottom w-7/12 px-2">ciao</p>
+                <p class="radiusBottom w-7/12 px-2"></p>
               </div>
 
               <div class="instagram flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
                 <i class="fab fa-instagram text-orange-600 pr-5 lg:pr-2 w-1/12"></i>
-                <p class="radiusBottom w-7/12 px-2">ciao</p>
+                <p class="radiusBottom w-7/12 px-2">
+                  <a href="" target="_blank"></a>
+                </p>
               </div>
 
               <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
                 <i class="fab fa-facebook text-blue-600 pr-5 lg:pr-2 w-1/12"></i>
-                <p class="radiusBottom w-7/12 px-2">ciao</p>
+                <p class="radiusBottom w-7/12 px-2">
+                  <a href="" target="_blank"></a>
+                </p>
               </div>
 
-              <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
+              <div class="linkedin flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
                 <i class="fab fa-linkedin-in text-blue-500 pr-5 lg:pr-2 w-1/12"></i>
-                <p class="radiusBottom w-7/12 px-2">ciao</p>
+                <p class="radiusBottom w-7/12 px-2">
+                  <a href="" target="_blank"></a>
+                </p>
               </div>
             </div>
           </div>
@@ -358,6 +460,33 @@
     </div>
 
   </body>
+
+  <!--validator form image-->
+  <script type="text/javascript">
+    $('form#formFoto').parsley()
+    .on('field:error', function(){
+      opacity_animation_border($(this.$element).get(0), 'rgb(155, 44, 44)');
+    })
+    .on('field:success', function(){
+      opacity_animation_border($(this.$element).get(0), 'rgb(72, 187, 120)');
+    })
+
+    window.Parsley
+    .addValidator('foto', {
+      validateString: function(value) {
+        var val = value.split('.');
+        var valif = val[val.length-1]
+        if(valif == 'jpg' || valif == 'png' || valif == 'jpeg') {
+          return true;
+        } else{
+          return false;
+        }
+      },
+      messages: {
+        it: "Non è un'immaggine supportata"
+      }
+    });
+  </script>
 
   <script type="text/javascript">
     $(document).ready(function(){
@@ -426,11 +555,15 @@
 
   <!-- Modifica/visualizza profilo personale/utente online -->
   <script type="text/javascript">
+
     $(document).ready(function(){
       //riempimento form con dati utente
       loadMyProfile(<%=userId %>);
 
-      $('button[name=modifica]').click(function(){
+      $('form.MyProfileContainer').parsley().on('form:init', function(){
+
+      })
+      .on('form:success', function(){
         var formData = [];
 
         formData.push($('.MyProfileContainer input[name=nome]').val().toLowerCase());
@@ -442,8 +575,32 @@
         formData.push($('.MyProfileContainer input[name=facebook]').val().toLowerCase());
         formData.push($('.MyProfileContainer input[name=linkedin]').val().toLowerCase());
 
-        modProfile(formData);
+        modProfile(formData, <%=userId%>);
       })
+      .on('form:submit', function(){
+        return false;
+      })
+      .on('field:error', function(){
+        opacity_animation_border($(this.$element).get(0), 'rgb(155, 44, 44)');
+      })
+      .on('field:success', function(){
+        opacity_animation_border($(this.$element).get(0), 'rgb(72, 187, 120)');
+      })
+    })
+
+    $('.fa-exclamation-circle').click(function(){
+      var target = $(this).parent().find('p');
+      if(!$(target).is(':visible')){
+        error_form_message(target.get(0), 1);
+        target.removeClass("hidden");
+      } else {
+        error_form_message(target.get(0), 0);
+      }
+    })
+
+    $('input').on('keyup', function(){
+      var target = $(this).parent().find('p.div-error');
+      target.addClass("hidden");
     })
 
     $('.div-userOnline').on('click', '.containerUser', function(){
@@ -463,11 +620,17 @@
       $('.profileOnlineContainer .nome p').text(nome).css('textTransform', 'capitalize');
       $('.profileOnlineContainer .cognome p').text(cognome).css('textTransform', 'capitalize');
       $('.profileOnlineContainer .mail p').text(mail);
-      $('.profileOnlineContainer .city p').text(city || 'Nessuna città impostata').css('textTransform', 'capitalize');
-      $('.profileOnlineContainer .instagram p').text(instagram || 'Nessun account');
-      $('.profileOnlineContainer .facebook p').text(facebook || 'Nessun account');
-      $('.profileOnlineContainer .linkedin p').text(linkedin || 'Nessun account');
-      $('.profileOnlineContainer .username p').text(username || 'Nessun account');
+      $('.profileOnlineContainer .city p').text(city != '' ? city : 'Nessuna città impostata').css('textTransform', 'capitalize');
+      $('.profileOnlineContainer .instagram > p > a').text(instagram != '' ? instagram : 'Nessun account').prop("href", "https://www.instagram.com/"+instagram+"/");
+      $('.profileOnlineContainer .facebook > p > a').text(facebook != '' ? facebook : 'Nessun account').prop("href", "https://www.facebook.com/"+facebook);
+      $('.profileOnlineContainer .linkedin > p > a').text(linkedin != '' ? linkedin : 'Nessun account').prop("href", "https://www.linkedin.com/in/"+linkedin);
+      $('.profileOnlineContainer .username p').text(username != '' ? username : 'Nessun account');
+
+      $('a').click(function(e){ //prevenire l'apertura di un link vuoto quando non ho un account per l'utente
+        if($(this).prop("href") == 'https://www.instagram.com/' || $(this).prop("href") == 'https://www.facebook.com/' || $(this).prop("href") == 'https://www.linkedin.com/in/'){
+          e.preventDefault();
+        }
+      })
 
       popupProfileOnline(1);
 
@@ -506,17 +669,45 @@
   <script type="text/javascript">
     $('.submit').click(function(){
       var text_message = $('textarea').val();
-      message(<%=userId%>, <%=idRoom%>, text_message);
-      $('textarea').val('');
+      if (text_message != '') {
+        message(<%=userId%>, <%=idRoom%>, text_message);
+        $('textarea').val('');
+      } else{
+        $('textarea').focus();
+      }
     })
 
+    function controllDate(){
+      $('.messageDiv > div').each(function(){
+        var date = new Date($(this).data('date'));
+        var today = new Date();
+
+        if(date.getDate() == today.getDate()-1 && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear()){
+          var string = $(this).find('.hour').text();
+          var controlString = string.substr(0, 4);
+
+          if(controlString != 'Ieri'){
+            $(this).find('.hour').text('Ieri, ' + string);
+          }
+        } else if(date.getDate() == today.getDate()-2 && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear()){
+            var string = $(this).find('.hour').text();
+            var controlString = string.substr(0, 4);
+
+            if(controlString == 'Ieri'){
+              var dataString = date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear().toString().substr(-2);
+              $(this).find('.hour').text(dataString + ', ' + string.substr(6));
+            }
+        }
+      })
+    }
+
     $(document).ready(function() {
-      $('.messageDiv').scrollTop($('.messageDiv > div:last-child').position().top);
+        $('.messageDiv').scrollTop(($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top));
     })
 
     function send(id_user, id_room, text_message){
       var today= new Date();
-      var stringOra = today.getHours() + ':' + today.getMinutes();
+      var stringOra = today.getHours() + ':' + (today.getMinutes()<10 ? '0' : '')  + today.getMinutes();
 
       var template = $('#template-message-my').html();
       var html = '';
@@ -526,28 +717,56 @@
                       .replace(/{{hour}}/g, stringOra);
 
       $('.messageDiv').append(html);
-      $('.messageDiv').scrollTop(($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top));
 
-      socket.emit('message', id_user, <%=idRoom%>, text_message, stringOra);
+      function scroll_to() {
+        $('.messageDiv').animate({
+          scrollTop: ($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top)
+        },'fast');
+      }
+
+      scroll_to();
+
+      socket.emit('message', '<%=user%>', <%=idRoom%>, text_message, stringOra);
+
+      controllDate(); //quando invio un nuovo messaggio controllo la data degli altri
     }
 
-    socket.on('sendMessage', function(id_user, text, time){
+    socket.on('sendMessage', function(username, text, time){
         var template = $('#template-message-user').html();
         var html = '';
-        var user = '';
-
-        $('.div-userOnline > div').each(function(){
-          if($(this).data('iduser') == id_user){
-            user = $(this).data('search');
-            return false;
-          }
-        })
 
         html += template.replace(/{{message}}/g, text)
-                        .replace(/{{nome}}/g, user)
+                        .replace(/{{nome}}/g, username)
                         .replace(/{{hour}}/g, time);
 
         $('.messageDiv').append(html);
+
+        var scroll_height = $('.messageDiv')[0].scrollHeight - $('.messageDiv')[0].offsetHeight - $('.messageDiv').scrollTop() - $('.messageDiv > div:first-child')[0].offsetHeight ;
+
+        if(scroll_height == 0){
+          $('.messageDiv').scrollTop(($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top));
+        } else{
+          new_message();
+          $('.new-message').removeClass('hidden');
+        }
+
+        controllDate();
+    })
+
+    $('.messageDiv').scroll(function(){
+      var scroll_height = $('.messageDiv')[0].scrollHeight - $('.messageDiv')[0].offsetHeight - $('.messageDiv').scrollTop();
+
+      if(scroll_height <= 10){
+        setTimeout(function(){
+          $('.new-message').addClass('hidden');
+        },100)
+      }
+    })
+
+    $('.new-message').click(function(){
+      $('.messageDiv').animate({
+        scrollTop: ($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top)
+      },'fast');
     })
   </script>
 
@@ -569,8 +788,8 @@
 
   <!--template my message-->
   <script type="text/template" id="template-message-my">
-    <div class="flex justify-end items-center">
-      <div class="talk-bubble tri-right radius right-in bg-gray-900 text-white w-auto px-5 py-2 mb-2 lg:mb-1 mr-5">
+    <div class="flex justify-end items-center" data-date="{{date}}">
+      <div class="talk-bubble tri-right radius right-in bg-black text-white w-auto px-5 py-2 mb-2 lg:mb-1 mr-5">
         <div class="talktext flex flex-col justify-center items-center">
 
           <p class="text-left w-full">{{message}}</p>
@@ -578,7 +797,7 @@
             <p class="title text-rigth username">{{username}}</p>
             <i class="fas fa-circle text-white px-2"></i>
             <i class="far fa-clock title"></i>
-            <p class="title ml-1">{{hour}}</p>
+            <p class="title ml-1 hour">{{hour}}</p>
           </div>
 
         </div>
@@ -588,8 +807,8 @@
 
   <!-- template message users -->
   <script type="text/template" id="template-message-user">
-    <div class="flex justify-start items-center">
-      <div class="talk-bubble tri-left radius left-in bg-black text-white w-auto px-5 py-2 ml-5 mb-2 lg:mb-1">
+    <div class="flex justify-start items-center" data-date="{{date}}">
+      <div class="talk-bubble tri-left radius left-in other-message text-white w-auto px-5 py-2 ml-5 mb-2 lg:mb-1">
         <div class="talktext flex flex-col justify-center items-center">
 
           <p class="text-left w-full">{{message}}</p>
@@ -597,7 +816,7 @@
             <p class="text-giallo text-rigth username">{{nome}}</p>
             <i class="fas fa-circle text-white px-2"></i>
             <i class="far fa-clock text-giallo"></i>
-            <p class="text-giallo ml-1">{{hour}}</p>
+            <p class="text-giallo ml-1 hour">{{hour}}</p>
           </div>
 
         </div>
@@ -758,6 +977,24 @@
 
   </script>
 
+  <!-- Script animazione navbar -->
+  <script type="text/javascript">
+    var open = 0;
+    $('.text-nav').click(function(){
+      animationNavbar('open');
+      open = 1;
+    })
+
+    $(document).click(function(event){
+      if(!$(event.target).closest('.text-nav').length){
+        if (open == 1){
+          animationNavbar('close');
+          open = 0;
+        }
+      }
+    })
+  </script>
+
   <!-- Controllo gli utenti fuori a intervalli e in caso sono inattivi li rimuovo -->
   <script type="text/javascript">
     $(document).ready(function(){
@@ -766,7 +1003,7 @@
       var timeNow = now.getTime();
 
       for(var i=0 ; i<out.length ; i++){
-        if(timeNow-out[i].dateOut > 10000){
+        if(timeNow-out[i].dateOut > 600000){
           socket.emit('offline', out[i].id_user, <%=idRoom%>, out[i].username);
           $('div[data-idUser='+out[i].id_user+']').remove();
           counterOnline--;
@@ -787,13 +1024,24 @@
   <!-- infinite scroll message -->
   <script type="text/javascript">
     var client = $('.messageDiv');
-    var index = 10;
+    var index = 0;
     var id = <%=userId%>;
     var room = <%=idRoom%>;
 
+    <%for (var i = 0 ; i<messages.length ; i++){ %>
+        if (<%=messages[i].id%> < index && <%=i%>>0) {
+          index = <%=messages[i].id%>;
+        } else if(<%=i%> == 0){
+          index = <%=messages[i].id%>;
+        }
+    <%} %>
+
     client.scroll(function(){
       if(client.scrollTop() == 0){
-        loadMessage(index, room);
+        loadMessage(index, room, <%=userId%>);
+      }
+
+      if(client[0].scrollHeight - client[0].offsetHeight - $('.messageDiv').scrollTop() == 0){
       }
     })
 

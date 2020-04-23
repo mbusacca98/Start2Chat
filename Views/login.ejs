@@ -8,15 +8,38 @@
     <link rel='stylesheet' href='/stylesheets/all_fontawesome.css' />
     <link rel='stylesheet' href='/stylesheets/admin.css' />
     <link rel='stylesheet' href='/stylesheets/all.css' />
-    <link rel='stylesheet' href='/stylesheets/user.css' />
+    <link rel='stylesheet' href='/stylesheets/login.css' />
+    <link rel='stylesheet' href='/stylesheets/noscript.css' />
 
     <script src="/javascripts/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/anime.min.js"></script>
     <script src="/javascripts/animation_login.js"></script>
+    <script src="/javascripts/animation_validationForm.js"></script>
+    <script src="/javascripts/validator.js"></script>
 
   </head>
   <body class="overflow-hidden">
+
+    <noscript>
+      <div class="w-screen h-screen flex justify-center items-center z-10 flex-col">
+        <div class="title-div flex w-full h-auto justify-center items-center">
+          <div class="flex justify-center items-center lg:w-1/10">
+            <img src="/images/logo.png" class="img-logo mr-5 ml-3 lg:ml-0" alt="">
+          </div>
+          <b class="title text-4xl">Start2Chat</b>
+        </div>
+        <div class="flex justify-center items-center mt-10 mb-10 text-giallo text-3xl lg:text-2xl w-screen">
+          <i class="fas fa-code mr-10"></i>
+        </div>
+        <div class="flex justify-center items-center flex-col">
+          <b class="text-white text-lg">Non puoi visualizzare la pagina</b>
+          <div class="flex justify-center items-center text-giallo px-5 text-center lg:text-base">
+            <p>Hai javascript disabilitato su questa pagina, prova ad attivarlo e ricarica!</p>
+          </div>
+        </div>
+      </div>
+    </noscript>
 
     <div class="h-full w-screen flex flex-col justify-center items-center px-10 py-10 text-4xl lg:text-base relative">
 
@@ -29,18 +52,32 @@
       </div>
 
       <div class="w-full flex justify-center items-center lg:w-1/2 relative text-black" id="form-login-admin">
-        <form class="w-full h-auto flex flex-col justify-center items-center py-8 px-10 mx-12 bg-white radius" action="login" method="post" id="login-student">
+        <form class="w-full h-auto flex flex-col justify-center items-center py-8 px-10 mx-12 bg-white radius" action="" method="post" id="login-student" data-parsley-focus="first">
 
           <p class="text-6xl lg:text-xl text-black bold mb-5">Accedi</p>
 
-          <div class="flex justify-center items-center w-full mb-5">
+          <div class="flex justify-center items-center w-full mb-5 relative">
             <i class="fas fa-user-circle w-1/12"></i>
-            <input class="transparence-input w-3/4 radius p-1 px-10 username" type="text" name="username" value="" placeholder="Username">
+            <input class="transparence-input w-3/4 radius p-1 px-10 username relative" type="text" name="username" value="" placeholder="Username" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+            <div class="error-field-icon flex items-center hidden">
+              <i class="fas fa-exclamation-circle text-red-800"></i>
+              <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+            </div>
+            <div class="div-check hidden">
+              <i class="fas fa-check text-green-500 "></i>
+            </div>
           </div>
 
-          <div class="flex justify-center items-center w-full mb-10">
+          <div class="flex justify-center items-center w-full mb-10 relative">
             <i class="fas fa-unlock w-1/12"></i>
-            <input class="transparence-input w-3/4 radius p-1 px-10 " type="password" name="password" value="" placeholder="Password">
+            <input class="transparence-input w-3/4 radius p-1 px-10 relative" type="password" name="password" value="" placeholder="Password" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
+            <div class="error-field-icon flex hidden items-center">
+              <i class="fas fa-exclamation-circle text-red-800 hidden"></i>
+              <p class="div-error px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
+            </div>
+            <div class="div-check flex hidden">
+              <i class="fas fa-check text-green-500"></i>
+            </div>
           </div>
 
           <input class="radius p-1 px-10 bg-black text-white button-submit text-giallo" type="submit" name="submit" value="Accedi!" >
@@ -64,11 +101,12 @@
   <script src="/javascripts/ajax.js"></script>
 
   <script>
-    $("input[name=submit]").click(function(e){
+    $('form').parsley().on('form:init', function(){
+
+    })
+    .on('form:success', function(){
       var username = $("form input[name=username]").val();
       var password = $("form input[name=password]").val();
-
-      e.preventDefault();
 
       $("input[name=submit]").val("Attendere...");
       $("input[name=submit]").attr("disabled", true);
@@ -76,10 +114,27 @@
 
       login(username, password);
     })
+    .on('form:submit', function(){
+      return false;
+    })
+    .on('field:error', function(){
+      $(this.$element).parent().find('.div-check').addClass('hidden');
+      $(this.$element).parent().find('.error-field-icon').removeClass('hidden');
+      var target = $(this.$element).parent().find('.error-field-icon');
+      opacity_animation(target.get(0), $(this.$element).get(0), 'rgb(155, 44, 44)');
+      $(this.$element).parent().find('.error-field-icon > p').text(this.getErrorsMessages());
+    })
+    .on('field:success', function(){
+      $(this.$element).parent().find('.div-check').removeClass('hidden');
+      var target = $(this.$element).parent().find('.div-check');
+      opacity_animation(target.get(0), $(this.$element).get(0), 'rgb(72, 187, 120)');
+      $(this.$element).parent().find('.error-field-icon').addClass('hidden');
+    })
 
     //Segnale di login avvenuto
     function loggedIn(){
       //Funzione di animazione del form
+
       formOut();
 
       setTimeout(function(){
@@ -87,6 +142,21 @@
       }, 1000);
 
     }
+
+    $('.fa-exclamation-circle').click(function(){
+      var target = $(this).parent().find('p');
+      if(!$(target).is(':visible')){
+        error_form_message(target.get(0), 1);
+        target.removeClass("hidden");
+      } else {
+        error_form_message(target.get(0), 0);
+      }
+    })
+
+    $('input').on('keyup', function(){
+      var target = $(this).parent().find('p');
+      target.addClass("hidden");
+    })
 
   </script>
 
@@ -127,7 +197,7 @@
       });
     })
   </script>
-  <!-- Script socket.io -->
+  <!-- Validation form -->
   <script type="text/javascript">
 
   </script>

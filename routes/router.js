@@ -41,7 +41,7 @@ router.post('/add_cat', function(req, res, next) {
     var conn = connect();
 
     conn.connect(function(err){
-      if(!err){
+      if(!err && req.body.nomeCat != ''){
         conn.query("INSERT INTO rooms (nome, private_flag, admin_id) VALUES (?, ?, ?)", [req.body.nomeCat.toLowerCase(), 1, req.session.id_user], function(err, result){
           if(!err){
             conn.query("INSERT INTO auth (id_user, id_room) VALUES (?, ?)", [req.session.id_user, result.insertId], function(err, result){
@@ -107,12 +107,12 @@ router.post('/ajax/login', function(req, res, next) {
               count: 1
             }
             access.push(data);
+            counterOnline++;
           }
 
           else{
             access[index].count = (access[index].count)+1;
           }
-
         }
 
         res.json({output: loginDb[0], username: req.session.user, id: req.session.id_user});
@@ -201,7 +201,7 @@ router.post('/ajax/delUser', function(req, res, next){
 })
 
 router.post('/ajax/addUser', function(req, res, next){
-  if(typeof req.session.id_user != 'undefined'){
+  if(typeof req.session.id_user != 'undefined' && req.body.username != ''){
     async function f1(){
       try{
         var username = req.body.username.toLowerCase();
@@ -227,7 +227,6 @@ router.post('/ajax/loadUser', function(req, res, next){
           var id_room = req.body.roomID;
 
           var response = await loadUser.loadUser(id_room);
-          console.log(response[0].nome);
 
           res.json({output: response});
         } catch {
@@ -241,13 +240,11 @@ router.post('/ajax/loadUser', function(req, res, next){
 
 router.post('/ajax/modNameCat', function(req, res, next){
 
-  if(typeof req.session.id_user != 'undefined'){
+  if(typeof req.session.id_user != 'undefined' && req.body.name != ''){
     async function f1(){
       try{
         var id = req.body.id;
         var name = req.body.name;
-
-        console.log(name, id);
 
         var response = await modCat.modName(id, name);
 
@@ -319,16 +316,16 @@ router.get('/:id/chat', function(req, res){
       if(!err){
         conn.query("SELECT * FROM rooms WHERE id=?", [req.params.id], function(err, result){
           if(!err){
-            if(result[0].private_flag == 0){
+            if(result.length > 0 && result[0].private_flag == 0){
               conn.query("SELECT messages.*, user.username FROM messages INNER JOIN user WHERE messages.id_rooms=? AND messages.id_user=user.id ORDER BY messages.id DESC LIMIT 30 ", [req.params.id], function(err, result){
                 res.render('chat', {idRoom: req.params.id, userId: req.session.id_user, user: req.session.user, users: userOnline[req.params.id], messages: result});
               })
             }
-            else{
-              conn.query("SELECT messages.*, user.username FROM messages INNER JOIN user WHERE messages.id_rooms=? AND messages.id_user=user.id ORDER BY messages.id DESC LIMIT 30 ", [req.session.id_user, req.params.id], function(err, result){
+            else if(result.length > 0 && result[0].private_flag != 0){
+              conn.query("SELECT * FROM auth WHERE id_user = ? AND id_room = ?", [req.session.id_user, req.params.id], function(err, result){
                 if(!err){
                   if(result.length > 0){
-                    conn.query("SELECT * FROM messages WHERE id_rooms=? ORDER BY id ASC LIMIT 30 ", [req.params.id], function(err, result){
+                    conn.query("SELECT messages.*, user.username FROM messages INNER JOIN user WHERE messages.id_rooms=? AND messages.id_user=user.id ORDER BY messages.id DESC LIMIT 30 ", [req.params.id], function(err, result){
                       res.render('chat', {idRoom: req.params.id, userId: req.session.id_user, user: req.session.user, users: userOnline[req.params.id], messages: result});
                     })
                   }
@@ -340,6 +337,9 @@ router.get('/:id/chat', function(req, res){
                   res.redirect('../rooms');
                 }
               })
+            }
+            else{
+              res.redirect('../rooms');
             }
           }
           else{
@@ -354,6 +354,7 @@ router.get('/:id/chat', function(req, res){
   }
 })
 
+//Caricamento con ajax dei message nel infinite loader
 router.post('/ajax/loadMessage', function(req, res, next){
 
   if(typeof req.session.id_user != 'undefined'){
@@ -362,7 +363,7 @@ router.post('/ajax/loadMessage', function(req, res, next){
         var conn = connect();
         conn.connect(function(err){
           if(!err){
-            conn.query("SELECT * FROM messages WHERE id_rooms=? AND id>? ORDER BY id ASC LIMIT 10", [req.body.room, req.body.index], function(err, result){
+            conn.query("SELECT messages.*, user.username FROM messages INNER JOIN user WHERE messages.id_rooms=? AND messages.id<? AND messages.id_user=user.id ORDER BY messages.id DESC LIMIT 30 ", [req.body.room, req.body.index], function(err, result){
               if(!err){
                 res.json({output: result});
               }

@@ -55,7 +55,6 @@ function online(id){
           conn.query("SELECT * FROM user WHERE id=?",[id] ,function(err, result){
             if(!err){
               if(result.length == 1){
-                //Invio segnale di logged-in al client
                 conn.end();
                 resolve(result[0]);
               }

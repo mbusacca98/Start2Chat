@@ -8,6 +8,28 @@ body {
   width: 100vw;
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100) !important;
+
+  scrollbar-width: none !important;
+}
+
+input {
+  scrollbar-width: none;
+}
+
+textarea {
+  scrollbar-width: none;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+head {
+  scrollbar-width: none;
+}
+
+div {
+  scrollbar-width: none;
 }
 
 ::-webkit-scrollbar{
@@ -47,7 +69,12 @@ button, input[type=submit], input[type=button]{
 }
 
 .transparence-input{
-  background-color: rgba(158, 158, 158, 0.05)
+  background-color: rgba(158, 158, 158, 0.05);
+  border: solid 1px transparent
+}
+
+.bordered {
+  border: solid 1px transparent
 }
 
 input, button{

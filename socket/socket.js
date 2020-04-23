@@ -26,7 +26,6 @@ function socket(io){
       }
 
       function insert(){
-        counterOnline++;
         dataUser.online(idUser).then(function(idUser){
           var data = idUser;
           data.password = '';
@@ -39,16 +38,19 @@ function socket(io){
       }
 
       async function controllo_access(){
-        var f_exist = await function(){
+        var f_exist = 0;
+
+        function f(){
           for(var i=0 ; i<access.length ; i++){
             if(access[i].username == name){
-              return 1;
-              break;
+              f_exist = 1;
             }
           }
         }
 
-        if(f_exist == 0){
+        await f();
+
+        if(f_exist != 1){
           var data = {
             username: name,
             count: 1
@@ -124,8 +126,8 @@ function socket(io){
       socket.to(idRoom).emit("changefoto", userId, url);
     })
 
-    socket.on('message', function(id_user, idRoom, text, ora){
-      socket.to(idRoom).emit('sendMessage', id_user, text, ora);
+    socket.on('message', function(username, idRoom, text, ora){
+      socket.to(idRoom).emit('sendMessage', username, text, ora);
     })
 
     //decremento il contatore e tolgo utente dall'array degli utenti online
@@ -137,7 +139,6 @@ function socket(io){
           if(access[i].count > 1){
             access[i].count = (access[i].count)-1;
           }
-
           else{
             for (var i=0 ; i<userOnline[idRoom].length ; i++){
               if(userOnline[idRoom][i].id == idUser){
@@ -167,9 +168,29 @@ function socket(io){
       socket.to(idRoom).emit('stopWriting', userId);
     })
 
-    socket.on('disconnect', function(){
-
+    //Modifica del profilo
+    socket.on('modProfile', function(data, id){
+      for(var i=0 ; i<userOnline.length ; i++){
+        try {
+          for (var k=0; k<userOnline[i].length; k++) {
+            if (userOnline[i][k].id == id) {
+              userOnline[i][k].nome = data[0];
+              userOnline[i][k].cognome = data[1];
+              userOnline[i][k].mail = data[2];
+              userOnline[i][k].username = data[3];
+              userOnline[i][k].city = data[4];
+              userOnline[i][k].instagram = data[5];
+              userOnline[i][k].facebook = data[6];
+              userOnline[i][k].linkedin = data[7];
+            }
+          }
+        } catch (e) {
+          //Lo uso soltanto per non fare crushare il server in caso di length = 0 e quindi gestisco l'eccezione
+          //In caso di eccezione non effettuo nessuna operazione
+        }
+      }
     })
+
   })
 }
 
