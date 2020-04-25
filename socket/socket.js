@@ -90,19 +90,23 @@ function socket(io){
       socket.to(idRoom).emit('dentro', userId);
       status(idRoom, userId, '1');
 
+      //Scrivo nel socket le mie variabili
+      socket.idRoom = idRoom;
+      socket.userId = userId;
+
       for(var i=0 ; i<userOnline[idRoom].length ; i++){
         if(userOnline[idRoom][i].id == userId){
           userOnline[idRoom][i].out = 'dentro';
+          socket.name = userOnline[idRoom][i].username; //Scrivo nel socket la variabile nome
         }
       }
     })
 
-    socket.on('fuori', async function(idRoom, userId){
-      socket.to(idRoom).emit('fuori', userId);
-      status(idRoom, userId, '0');
+    socket.on('close', async function(idRoom, userId, name){
+      onClose(idRoom, userId, name);
     })
 
-    socket.on('close', async function(idRoom, userId, name){
+    function onClose(idRoom, userId, name){
       var datetime = new Date();
       socket.to(idRoom).emit('close', userId, datetime.getTime(), name);
       status(idRoom, userId, '0');
@@ -112,18 +116,14 @@ function socket(io){
           userOnline[idRoom][i].out = datetime.getTime();
         }
       }
-    })
+    }
 
     socket.on('changefoto', async function(idRoom, userId, url){
-      var change = await function(){
         for(var i=0 ; i<userOnline[idRoom].length ; i++){
           if(userOnline[idRoom][i].id == userId){
             userOnline[idRoom][i].url = url;
           }
         }
-      }
-
-      socket.to(idRoom).emit("changefoto", userId, url);
     })
 
     socket.on('message', function(username, idRoom, text, ora){
@@ -188,6 +188,15 @@ function socket(io){
           //Lo uso soltanto per non fare crushare il server in caso di length = 0 e quindi gestisco l'eccezione
           //In caso di eccezione non effettuo nessuna operazione
         }
+      }
+    })
+
+    socket.on('disconnect', function(){
+      //In caso di disconnessione del socket richiamo la funziona onClose che mi fa andare offline e lo dice anche algi altri connessi
+      try {
+        onClose(socket.idRoom, socket.userId, socket.name);
+      } catch (e) {
+
       }
     })
 

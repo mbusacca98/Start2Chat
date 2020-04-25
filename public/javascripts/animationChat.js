@@ -22,12 +22,12 @@ function fotoForm(){
       easing: 'cubicBezier(0.600, -0.280, 0.735, 0.045)'
     })
     .add({
-      targets: '.form',
+      targets: '#formProfile',
       opacity: ['1', '0'],
       scale: ['1', '0'],
       duration: 500,
       complete: function(){
-        $('.form').toggleClass('hidden');
+        $('#formProfile').toggleClass('hidden');
         $('.fotoForm').toggleClass('hidden');
       }
     })
@@ -37,7 +37,7 @@ function fotoForm(){
       scale: ['0', '1'],
       duration: 300,
       complete: function(){
-        $('.changePhoto').text('Chiudi');
+        $('.changePhoto').text('Indietro');
         countFotoForm++;
       }
     })
@@ -52,17 +52,17 @@ function fotoForm(){
       scale: ['1', '0'],
       duration: 500,
       complete: function(){
-        $('.form').toggleClass('hidden');
+        $('#formProfile').toggleClass('hidden');
         $('.fotoForm').toggleClass('hidden');
       }
     })
     .add({
-      targets: '.form',
+      targets: '#formProfile',
       opacity: ['0', '1'],
       scale: ['0', '1'],
       duration: 300,
       complete: function(){
-        $('.changePhoto').text('Change');
+        $('.changePhoto').text('Cambia');
         countFotoForm = 0;
       }
     })
@@ -78,12 +78,12 @@ function changePassword(){
       easing: 'cubicBezier(0.600, -0.280, 0.735, 0.045)'
     })
     .add({
-      targets: '.form, .form1',
+      targets: '#formProfile',
       opacity: ['1', '0'],
       scale: ['1', '0'],
       duration: 500,
       complete: function(){
-        $('.form, .form1').toggleClass('hidden');
+        $('#formProfile').toggleClass('hidden');
         $('.changePassword').toggleClass('hidden');
       }
     })
@@ -107,12 +107,12 @@ function changePassword(){
       scale: ['1', '0'],
       duration: 500,
       complete: function(){
-        $('.form, .form1').toggleClass('hidden');
+        $('#formProfile').toggleClass('hidden');
         $('.changePassword').toggleClass('hidden');
       }
     })
     .add({
-      targets: '.form, .form1',
+      targets: '#formProfile',
       opacity: ['0', '1'],
       scale: ['0', '1'],
       duration: 300,

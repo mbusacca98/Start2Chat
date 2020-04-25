@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 23, 2020 alle 18:08
+-- Creato il: Apr 25, 2020 alle 23:11
 -- Versione del server: 10.4.10-MariaDB
 -- Versione PHP: 7.3.12
 
@@ -48,26 +48,6 @@ CREATE TABLE `messages` (
   `id_user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dump dei dati per la tabella `messages`
---
-
-INSERT INTO `messages` (`id`, `date`, `text`, `id_rooms`, `id_user`) VALUES
-(212, '2020-04-01 15:06:36', '23', 1, 2),
-(213, '2020-04-01 15:06:39', '24', 1, 2),
-(214, '2020-04-01 15:06:41', '25', 1, 2),
-(215, '2020-04-01 15:06:43', '26', 1, 2),
-(216, '2020-04-01 15:06:46', '27', 1, 2),
-(217, '2020-04-01 15:06:49', '28', 1, 2),
-(218, '2020-04-01 15:06:52', '29', 1, 2),
-(219, '2020-04-01 15:06:54', '30', 1, 2),
-(220, '2020-04-01 15:06:57', '31', 1, 2),
-(221, '2020-04-11 17:50:37', 'ciao', 1, 2),
-(222, '2020-04-11 18:01:47', 'ok', 1, 2),
-(224, '2020-04-11 22:41:05', 'ciao 1', 1, 15),
-(225, '2020-04-17 18:49:52', 'ciao', 1, 2),
-(226, '2020-04-18 18:50:49', 'ok', 1, 2);
-
 -- --------------------------------------------------------
 
 --
@@ -80,6 +60,18 @@ CREATE TABLE `rooms` (
   `private_flag` tinyint(4) NOT NULL,
   `admin_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `rooms`
+--
+
+INSERT INTO `rooms` (`id`, `nome`, `private_flag`, `admin_id`) VALUES
+(1, 'programmazione', 0, 0),
+(2, 'marketing', 0, 0),
+(3, 'ux/ui', 0, 0),
+(4, 'ai', 0, 0),
+(5, 'data', 0, 0),
+(6, 'blockchain', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -138,25 +130,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT per la tabella `auth`
 --
 ALTER TABLE `auth`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT per la tabella `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=259;
 
 --
 -- AUTO_INCREMENT per la tabella `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT per la tabella `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

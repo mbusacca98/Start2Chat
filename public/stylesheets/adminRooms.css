@@ -16,12 +16,6 @@
   display: none
 }
 
-.div-error{
-  position: absolute !important;
-  background-color: rgba(195, 24, 27, 0.49);
-  white-space: nowrap;
-  z-index: 1
-}
 
 .avviso-del{
   top:0;
@@ -42,7 +36,6 @@
 
 .lista-container{
   max-height: 50%;
-  z-index: -1;
 }
 
 thead{
@@ -55,6 +48,10 @@ thead{
 
 .pop-up_add{
   bottom: -80px;
+}
+
+.del-button{
+  cursor: pointer !important;
 }
 
 @media only screen and (min-width: 1023px) {

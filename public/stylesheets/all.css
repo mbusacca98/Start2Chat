@@ -45,7 +45,7 @@ button, input[type=submit], input[type=button]{
 }
 
 .text-giallo{
-  color: #FFCB00;
+  color: #FFCB00 !important;
 }
 
 .title{

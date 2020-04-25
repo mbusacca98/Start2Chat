@@ -252,8 +252,8 @@
       </div>
 
       <!-- Div absolute per modifica/visualizza profilo utente e logout -->
-      <div class="MyProfileContainer w-screen h-screen z-10 flex justify-center items-center hidden">
-        <form class="MyProfileContainer w-screen h-screen z-10 flex justify-center items-center hidden" action="" method="" autocomplete="off">
+      <div class="MyProfileContainer z-10 flex justify-center items-center hidden">
+        <form class="w-full h-full flex justify-center items-center " action="" method="" autocomplete="off" id="formProfile">
 
         <div class="radius divProfile w-5/6 lg:w-2/5 h-auto flex flex-col justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
           <div class="titleProfile flex justify-center items-center w-full lg:w-full relative stagger">
@@ -262,27 +262,11 @@
               <i class="fas fa-times text-5xl lg:text-xl pr-10 text-white" onclick="popupMyProfile(0)" style="cursor:pointer"></i>
             </div>
           </div>
-          <!--Div cambio password-->
-          <div class="changePassword flex justify-center items-center w-full h-auto lg:p-5 hidden">
-            <div class="flex flex-col justify-center items-center " action="" method="post">
-              <input class="radius lg:px-5 mb-2" type="password" name="vecchia" value="" placeholder="Vecchia password">
-              <input class="radius lg:px-5" type="password" name="nuova" value="" placeholder="Nuova password">
-              <div class="flex justify-center items-center w-full">
-                <button class="indietro radius lg:px-5 bg-black text-white lg:mt-5 w-1/2" type="button" name="button" onclick="changePassword()">Indietro</button>
-                <button class="modPassword radius lg:px-5 bg-black text-giallo lg:mt-5 w-1/2 ml-2" type="button" name="button" onclick="modPassword(<%=userId%>)">Conferma</button>
-              </div>
-            </div>
-
-            <div class="text-white text-center text-4xl lg:text-xl py-5 lg:py-1 hidden">
-              <b class="w-full text-center ok hidden">Password modificata!</b>
-              <b class="no w-full text-center hidden">Errore, riprova!</b>
-            </div>
-          </div>
           <!-- foto e nome e cognome -->
           <div class="flex w-full justify-center items-center pt-5 lg:w-full form1 ">
             <div class="myfoto flex flex-col justify-center items-center w-1/3 stagger">
               <img class="w-40 h-40 lg:w-20 lg:h-20 flex" src="/images/noimgprofile.jpeg" alt="">
-              <p class="changePhoto text-2xl lg:text-xs" style="cursor:pointer" onclick="fotoForm()">Change</p>
+              <p class="changePhoto text-2xl lg:text-xs" style="cursor:pointer" onclick="fotoForm()">Cambia</p>
             </div>
 
             <div class="flex flex-col justify-center items-center w-2/3 stagger">
@@ -341,22 +325,22 @@
 
             <div class="city flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fas fa-home text-white pr-5 lg:pr-0 w-1/12"></i>
-              <input class="radius px-5 w-7/12" type="text" name="city" value="" placeholder="La tua città">
+              <input class="radius px-5 w-7/12" type="text" name="city" value="" placeholder="La tua città" data-parsley-required="false">
             </div>
 
             <div class="instagram flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fab fa-instagram text-white pr-5 lg:pr-2 w-1/12"></i>
-              <input class="radius px-5 w-7/12" type="text" name="instagram" value="" placeholder="Username instagram">
+              <input class="radius px-5 w-7/12" type="text" name="instagram" value="" placeholder="Username instagram" data-parsley-required="false">
             </div>
 
             <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fab fa-facebook text-white pr-5 lg:pr-2 w-1/12"></i>
-              <input class="radius px-5 w-7/12" type="text" name="facebook" value="" placeholder="Username facebook">
+              <input class="radius px-5 w-7/12" type="text" name="facebook" value="" placeholder="Username facebook" data-parsley-required="false">
             </div>
 
             <div class="facebook flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
               <i class="fab fa-linkedin-in pr-5 lg:pr-2 w-1/12 text-white"></i>
-              <input class="radius px-5 w-7/12" type="text" name="linkedin" value="" placeholder="Link linkedin">
+              <input class="radius px-5 w-7/12" type="text" name="linkedin" value="" placeholder="Link linkedin" data-parsley-required="false">
             </div>
 
             <div class="modPassword flex justify-center items-center w-full mt-5 lg:mt-2 stagger">
@@ -364,24 +348,58 @@
             </div>
 
             <div class="buttonDiv flex justify-around items-center text-giallo mt-8 w-2/3 lg:mt-4">
-              <button class="radius bg-black w-1/2 mr-5 lg:w-1/3 flex justify-center items-center lg:mr-0 px-5 py-1 stagger" type="submit" name="modifica"><b>Modifica</b></button>
-              <button class="radius bg-red-700 w-1/2 lg:w-1/3 flex justify-center items-center px-5 py-1 text-white stagger" type="button" name="logout" onclick="logout()"><b>Logout</b></button>
+              <input class="radius bg-black w-1/2 mr-5 lg:w-1/3 flex font-bold text-giallo justify-center items-center lg:mr-0 px-5 py-1 stagger" type="submit" name="modifica" value="Modifica"></input>
+              <button class="radius bg-red-700 w-1/2 lg:w-1/3 flex justify-center items-center px-5 py-1 text-white stagger button-logout" type="button" name="logout"><b>Logout</b></button>
             </div>
-          </div>
-
-          <!-- Form inserimento foto -->
-          <div class="fotoForm mt-10 hidden">
-            <form class="" action="index.html" method="post">
-
-            </form>
-            <form class="flex flex-col justify-center items-center w-full fotoProfilo" action="../foto" method="post" enctype="multipart/form-data" id="formFoto" data-parsley-validate="">
-              <input class="radius w-full bg-white inputfoto bordered" type="file" name="foto" value="" required="" data-parsley-trigger="focus keyup" data-parsley-required-message="Inserire foto"  data-parsley-foto="">
-              <input class="bg-white mt-2 radius px-5 py-1" type="submit" name="submit" value="Invia">
-            </form>
           </div>
         </div>
       </form>
 
+      <!-- Form inserimento foto -->
+      <div class="fotoForm hidden radius divProfile w-5/6 lg:w-2/5 h-auto flex flex-col justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
+
+        <div class="title">
+          <b class="text-5xl lg:text-xl">Modifica foto profilo</b>
+        </div>
+
+        <div class="flex justify-center items-center pt-5">
+          <div class="myfoto flex flex-col justify-center items-center w-1/3 stagger mr-5">
+            <img class="w-40 h-40 lg:w-20 lg:h-20 flex" src="/images/noimgprofile.jpeg" alt="">
+            <p class="changePhoto text-2xl lg:text-xs" style="cursor:pointer" onclick="fotoForm()">Change</p>
+          </div>
+
+          <form class="" action="" method="post">
+
+          </form>
+          <form class="flex flex-col justify-center items-center w-full fotoProfilo" action="../foto" method="post" enctype="multipart/form-data" id="formFoto" data-parsley-validate="">
+            <input class="radius w-full bg-white inputfoto bordered" type="file" name="foto" value="" required="" data-parsley-trigger="focus keyup" data-parsley-required-message="Inserire foto"  data-parsley-foto="">
+            <input class="bg-black font-bold text-giallo mt-2 radius px-5 py-1" type="submit" name="submit" value="Invia">
+          </form>
+        </div>
+
+      </div>
+
+      <!--Div cambio password-->
+      <div class="changePassword hidden radius divProfile w-5/6 lg:w-2/5 h-auto flex flex-col justify-center items-center text-black text-2xl lg:text-sm p-8 lg:p-5">
+        <div class="title">
+          <b class="text-5xl lg:text-xl">Cambio password</b>
+        </div>
+        <form class="pt-5" action="index.html" method="post" id="changePassword">
+          <div class="flex flex-col justify-center items-center" action="" method="post">
+            <input class="radius lg:px-5 mb-2 bordered" type="password" name="vecchia" value="" placeholder="Vecchia password" minlength="4" required="" data-parsley-trigger="focus keyup">
+            <input class="radius lg:px-5 bordered" type="password" name="nuova" value="" placeholder="Nuova password" required="" minlength="4" data-parsley-equalto="input[name=vecchia]" data-parsley-trigger="focus keyup">
+            <div class="flex justify-center items-center w-full">
+              <button class="indietro radius lg:px-5 bg-black text-white lg:mt-5 w-1/2" type="button" name="button" onclick="changePassword()">Indietro</button>
+              <input class="modPassword radius lg:px-5 bg-black text-giallo lg:mt-5 w-1/2 ml-2" type="submit" name="submit" value="Conferma"></input>
+            </div>
+          </div>
+
+          <div class="text-white text-center text-4xl lg:text-xl py-5 lg:py-1 hidden">
+            <b class="w-full text-center ok hidden">Password modificata!</b>
+            <b class="no w-full text-center hidden">Errore, riprova!</b>
+          </div>
+        </form>
+      </div>
       </div>
 
       <!-- Div dati utenti online -->
@@ -390,7 +408,7 @@
           <div class="profileDescription w-full flex-col justify-center items-center text-white">
             <!-- Titolo -->
             <div class="titleProfile flex justify-center items-center w-full relative stagger">
-              <b class="title text-5xl lg:text-xl">Profilo di Matteo</b>
+              <b class="title text-3xl lg:text-xl"></b>
               <div class="flex items-center closeProfile w-auto h-full">
                 <i class="fas fa-times text-5xl lg:text-xl pr-10 text-white" onclick="popupProfileOnline(0)" style="cursor:pointer"></i>
               </div>
@@ -461,6 +479,22 @@
 
   </body>
 
+  <script type="text/javascript">
+    $('#changePassword').parsley()
+    .on('field:error', function(){
+      opacity_animation_border($(this.$element).get(0), 'rgb(155, 44, 44)');
+    })
+    .on('field:success', function(){
+      opacity_animation_border($(this.$element).get(0), 'rgb(72, 187, 120)');
+    })
+    .on('form:submit', function(){
+      return false;
+    })
+    .on('form:success', function() {
+      modPassword(<%=userId%>);
+    })
+  </script>
+
   <!--validator form image-->
   <script type="text/javascript">
     $('form#formFoto').parsley()
@@ -469,6 +503,14 @@
     })
     .on('field:success', function(){
       opacity_animation_border($(this.$element).get(0), 'rgb(72, 187, 120)');
+    })
+    .on('form:submit', function(){
+      var stringa = $('.fotoProfilo .inputfoto').val();
+      var separatore = "\\";
+      var splitStringa = stringa.split(separatore.trim());
+      var url = "/fotoUtenti/"+splitStringa[2];
+
+      socket.emit('changefoto', <%=idRoom%>, <%=userId%>, url);
     })
 
     window.Parsley
@@ -486,6 +528,8 @@
         it: "Non è un'immaggine supportata"
       }
     });
+
+
   </script>
 
   <script type="text/javascript">
@@ -521,7 +565,7 @@
       })
 
       window.addEventListener("offline", function(){
-        socket.emit('fuori', <%=idRoom%>, <%=userId %>); // mando a tutti che sono andato offline, assente
+        socket.emit('close', <%=idRoom%>, <%=userId%>, '<%=user%>');
         offline();
       })
 
@@ -545,11 +589,11 @@
         $('.circle-online').css('color', 'red');
       }
 
-      function logout(){
+      $('.button-logout').click(function(){
         var id = <%=userId %>;
         socket.emit('offline', id, <%=idRoom%>, "<%=user%>");
         window.location.href="../logout";
-      }
+      })
 
   </script>
 
@@ -560,20 +604,20 @@
       //riempimento form con dati utente
       loadMyProfile(<%=userId %>);
 
-      $('form.MyProfileContainer').parsley().on('form:init', function(){
+      $('#formProfile').parsley().on('form:init', function(){
 
       })
       .on('form:success', function(){
         var formData = [];
 
-        formData.push($('.MyProfileContainer input[name=nome]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=cognome]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=mail]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=username]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=city]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=instagram]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=facebook]').val().toLowerCase());
-        formData.push($('.MyProfileContainer input[name=linkedin]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=nome]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=cognome]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=mail]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=username]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=city]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=instagram]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=facebook]').val().toLowerCase());
+        formData.push($('.MyProfileContainer > form input[name=linkedin]').val().toLowerCase());
 
         modProfile(formData, <%=userId%>);
       })
@@ -586,21 +630,6 @@
       .on('field:success', function(){
         opacity_animation_border($(this.$element).get(0), 'rgb(72, 187, 120)');
       })
-    })
-
-    $('.fa-exclamation-circle').click(function(){
-      var target = $(this).parent().find('p');
-      if(!$(target).is(':visible')){
-        error_form_message(target.get(0), 1);
-        target.removeClass("hidden");
-      } else {
-        error_form_message(target.get(0), 0);
-      }
-    })
-
-    $('input').on('keyup', function(){
-      var target = $(this).parent().find('p.div-error');
-      target.addClass("hidden");
     })
 
     $('.div-userOnline').on('click', '.containerUser', function(){
@@ -702,7 +731,11 @@
     }
 
     $(document).ready(function() {
+      try {
         $('.messageDiv').scrollTop(($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top));
+      } catch (e) {
+
+      }
     })
 
     function send(id_user, id_room, text_message){
@@ -743,7 +776,7 @@
 
         var scroll_height = $('.messageDiv')[0].scrollHeight - $('.messageDiv')[0].offsetHeight - $('.messageDiv').scrollTop() - $('.messageDiv > div:first-child')[0].offsetHeight ;
 
-        if(scroll_height == 0){
+        if(scroll_height <= 0){
           $('.messageDiv').scrollTop(($('.messageDiv > div:last-child').position().top)-($('.messageDiv > div').position().top));
         } else{
           new_message();
@@ -844,18 +877,6 @@
         }
       })
 
-      $('.fotoProfilo .inputfoto').submit(function(e){
-        e.preventDefault();
-
-        var stringa = $('.fotoProfilo .inputfoto').val();
-        var separatore = "\\";
-        var splitStringa = stringa.split(separatore.trim());
-        var url = "/fotoUtenti/"+splitStringa[2];
-
-        socket.emit('changefoto', <%=idRoom%>, <%=userId%>, url);
-        $('.fotoProfilO').submit();
-      })
-
     socket.on('dentro', function(id){
       $('div[data-idUser='+id+'] i').removeClass('green');
       $('div[data-idUser='+id+'] i').removeClass('red');
@@ -868,18 +889,6 @@
           out.splice(i, 1);
           break;
         }
-      }
-    })
-
-    socket.on('fuori', function(id){
-      $('div[data-idUser='+id+'] i').removeClass('green');
-      $('div[data-idUser='+id+'] i').removeClass('red');
-      $('div[data-idUser='+id+'] i').addClass('red');
-
-      $('div[data-idUser='+id+'] .writing').text('Offline');
-
-      if(id == <%=userId%>){ //Se l'id del user che è uscito è uguale a userId rimando online l'utente, questo in caso di multi login
-        socket.emit('dentro', <%=idRoom%>, <%=userId %>);
       }
     })
 

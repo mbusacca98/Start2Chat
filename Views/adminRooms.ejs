@@ -68,7 +68,6 @@
                   <input data-name="<%=nameRoom %>" data-id="<%=roomID %>" type="text" name="name" value="<%=nameRoom %>" class="radius p-1 bg-gray-300 text-center bordered" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
                   <div class="error-field-icon flex hidden items-center">
                     <i class="fas fa-exclamation-circle text-red-800"></i>
-                    <p class="div-error lg:ml-5 px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
                   </div>
                   <div class="div-check hidden">
                     <i class="fas fa-check text-green-500 "></i>
@@ -95,7 +94,6 @@
                   <input type="text" name="nome" value="" placeholder="Nome utente da aggiungere" class="w-2/3 radius p-1 bg-gray-300 text-center bordered" data-parsley-required="true" data-parsley-trigger="focus keyup" data-parsley-required-message="Campo obbligatorio">
                   <div class="error-field-icon flex hidden items-center">
                     <i class="fas fa-exclamation-circle text-red-800"></i>
-                    <p class="div-error lg:ml-5 px-1 absolute text-white lg:text-sm radius h-auto hidden"></p>
                   </div>
                   <div class="div-check hidden">
                     <i class="fas fa-check text-green-500 "></i>
@@ -179,13 +177,12 @@
         $(this.$element).parent().find('.error-field-icon').removeClass('hidden');
         var target = $(this.$element).parent().find('.error-field-icon');
         opacity_animation(target.get(0), $(this.$element).get(0), 'rgb(155, 44, 44)');
-        $(this.$element).parent().find('.error-field-icon > p').text(this.getErrorsMessages());
       })
       .on('field:success', function(){
+        $(this.$element).parent().find('.error-field-icon').addClass('hidden');
         $(this.$element).parent().find('.div-check').removeClass('hidden');
         var target = $(this.$element).parent().find('.div-check');
         opacity_animation(target.get(0), $(this.$element).get(0), 'rgb(72, 187, 120)');
-        $(this.$element).parent().find('.error-field-icon').addClass('hidden');
       })
       //Fine validation form
 
@@ -243,34 +240,18 @@
       })
       //Fine form validation
 
-      //Funzione per i messaggi di errore nel form
-      $('.fa-exclamation-circle').click(function(){
-        var target = $(this).parent().find('p');
-        if(!$(target).is(':visible')){
-          error_form_message(target.get(0), 1);
-          target.removeClass("hidden");
-        } else {
-          error_form_message(target.get(0), 0);
-        }
-      })
-
-      $('input').on('keyup', function(){
-        var target = $(this).parent().find('p.div-error');
-        target.addClass("hidden");
-      })
-
       $('input[name=del]').click(function(){
         var idRoom = $(this).data('id');
 
-        $('.avviso-del').toggleClass('hidden');
+        $('.avviso-del').removeClass('hidden');
+      })
 
-        $('button[name=no]').click(function(){
-          $('.avviso-del').toggleClass('hidden');
-        })
+      $('button[name=no]').click(function(){
+        $('.avviso-del').addClass('hidden');
+      })
 
-        $('button[name=si]').click(function(){
-          delRoom(idRoom);
-        })
+      $('button[name=si]').click(function(){
+        delRoom(idRoom);
       })
 
     })

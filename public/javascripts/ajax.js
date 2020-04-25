@@ -280,56 +280,60 @@ function loadMessage(indice, room, userId){
     },
     data: 'index='+indice+'&room='+room,
     success: function(data){
-      $('.spinner-message').addClass('hidden');
+      try {
+        $('.spinner-message').addClass('hidden');
 
-      index = data.output[0].id;
+        index = data.output[0].id;
 
-      for(var i=0 ; i<data.output.length ; i++){
-        if(data.output[i].id < index){
-          index = data.output[i].id;
+        for(var i=0 ; i<data.output.length ; i++){
+          if(data.output[i].id < index){
+            index = data.output[i].id;
+          }
         }
+
+        var i = 0;
+        var temp = client[0].scrollHeight;
+
+        var d = new Date();
+        var today = d.getDate();
+        var stringData = "";
+
+        for(i=0 ; i<10 ; i++){
+          var html = '';
+          var user = '';
+
+          var date = new Date(data.output[i].date);
+
+          if(date.getDate() == today-1 && date.getMonth() == d.getMonth() && date.getFullYear() == d.getFullYear()) {
+              stringData = "Ieri, ";
+          } else if(date.getDate() < today-1 && date.getMonth() == d.getMonth() && date.getFullYear() == d.getFullYear()){
+              var month = date.getMonth() + 1 ;
+              stringData = date.getDate() + '/' + month + '/' + date.getFullYear().toString().substr(-2) + ', ';
+          }
+
+          if(data.output[i].id_user == userId){
+            var template = $('#template-message-my').html();
+            html += template.replace(/{{message}}/g, data.output[i].text)
+                            .replace(/{{date}}/g, date)
+                            .replace(/{{username}}/g, data.output[i].username)
+                            .replace(/{{hour}}/g, (stringData != '' ? stringData : '') + date.getHours() + ':' + (date.getMinutes()<10 ? '0' : '') + date.getMinutes());
+          } else{
+            var template = $('#template-message-user').html();
+            html += template.replace(/{{message}}/g, data.output[i].text)
+                            .replace(/{{date}}/g, date)
+                            .replace(/{{nome}}/g, data.output[i].username)
+                            .replace(/{{hour}}/g, (stringData != '' ? stringData : '') + date.getHours() + ':' + (date.getMinutes()<10 ? '0' : '') + date.getMinutes());
+          }
+
+          $('.messageDiv').prepend(html);
+
+          $('.messageDiv').scrollTop($('.messageDiv')[0].scrollHeight - temp);
+        }
+
+        $('.spinner-message').addClass('hidden');
+      } catch (e) {
+
       }
-
-      var i = 0;
-      var temp = client[0].scrollHeight;
-
-      var d = new Date();
-      var today = d.getDate();
-      var stringData = "";
-
-      for(i=0 ; i<10 ; i++){
-        var html = '';
-        var user = '';
-
-        var date = new Date(data.output[i].date);
-
-        if(date.getDate() == today-1 && date.getMonth() == d.getMonth() && date.getFullYear() == d.getFullYear()) {
-            stringData = "Ieri, ";
-        } else if(date.getDate() < today-1 && date.getMonth() == d.getMonth() && date.getFullYear() == d.getFullYear()){
-            var month = date.getMonth() + 1 ;
-            stringData = date.getDate() + '/' + month + '/' + date.getFullYear().toString().substr(-2) + ', ';
-        }
-
-        if(data.output[i].id_user == userId){
-          var template = $('#template-message-my').html();
-          html += template.replace(/{{message}}/g, data.output[i].text)
-                          .replace(/{{date}}/g, date)
-                          .replace(/{{username}}/g, data.output[i].username)
-                          .replace(/{{hour}}/g, (stringData != '' ? stringData : '') + date.getHours() + ':' + (date.getMinutes()<10 ? '0' : '') + date.getMinutes());
-        } else{
-          var template = $('#template-message-user').html();
-          html += template.replace(/{{message}}/g, data.output[i].text)
-                          .replace(/{{date}}/g, date)
-                          .replace(/{{nome}}/g, data.output[i].username)
-                          .replace(/{{hour}}/g, (stringData != '' ? stringData : '') + date.getHours() + ':' + (date.getMinutes()<10 ? '0' : '') + date.getMinutes());
-        }
-
-        $('.messageDiv').prepend(html);
-
-        $('.messageDiv').scrollTop($('.messageDiv')[0].scrollHeight - temp);
-      }
-
-      $('.spinner-message').addClass('hidden');
     }
   })
 }
