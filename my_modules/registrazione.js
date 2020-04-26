@@ -7,7 +7,9 @@ function reg(data){
   var conn = connect();
 
   var response = new Promise(function(resolve, reject){
-    if(data[0] != '' && data[1] != '' && data[2] != '' && data[3] != '' && data[4] != ''){
+    var mailSplit = data[3].split('@');
+    if(data[0] != '' && data[1] != '' && data[2].length >= 4 && data[3] != '' && data[4] != ''){
+      if (mailSplit.length == 2 && mailSplit[1].split('.').length == 2) {
         conn.connect(function(err){ //Mi connetto al db
           if(!err){
             let password = md5(data[4]); //Cifro la password con md5
@@ -40,6 +42,7 @@ function reg(data){
     else{
       resolve('campi-mancanti');
     }
+      }
   })
 
   return response;
